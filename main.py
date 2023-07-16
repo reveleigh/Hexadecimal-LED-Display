@@ -43,7 +43,8 @@ def turnOn():
     for i in range(numpix):
         strip.set_pixel(i, white)
         time.sleep(0.1)
-    strip.show()
+        print("Light ", i, " is on" )
+        strip.show()
 turnOn()
 
 #Pause to allow program to be stopped before
