@@ -1,6 +1,7 @@
 #import the libraries
 from machine import Pin
 from neopixel import Neopixel
+from led_matrix import led_matrix
 import utime
 import time
 import socket
