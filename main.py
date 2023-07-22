@@ -29,23 +29,31 @@ print(ap.ifconfig())
 
 
 # Setting up Neopixel object
-numpix = 96
+numpix = 136
 strip = Neopixel(numpix, 0, 22, "GRB")
 red = (255, 0, 0)
 off = (0,0,0)
 white = (255, 255, 255)
 blue = (0,0,50)
 orange = (255, 50, 0)
-strip.brightness(50)
+strip.brightness(100)
 
-#OPTION 0 is to turn off the LEDs
-# Turning off all the LEDs
-def turnOn():
+# turn off all leds
+def turnOff():
     for i in range(numpix):
-        strip.set_pixel(i, white)
+        strip.set_pixel(i, off)
         time.sleep(0.1)
-        print("Light ", i, " is on" )
+        print("Light ", i, " is off" )
         strip.show()
+
+# Run through all leds
+def turnOn():
+    for i in range(len(led_matrix)):
+        for j in range(len(led_matrix[i])):
+            strip.set_pixel(led_matrix[i][j], white)
+            time.sleep(0.05)
+            print("Light ", i, " is on" )
+            strip.show()
 turnOn()
 
 #Pause to allow program to be stopped before
@@ -66,7 +74,7 @@ async def index(request, response):
         <!DOCTYPE html>
         <html>
             <head>
-                <title>Binary Clock</title>
+                <title>Hexadecimal Display</title>
             </head>
             <body>
                         Hello
