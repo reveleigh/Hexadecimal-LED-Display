@@ -51,10 +51,54 @@ def turnOn():
     for i in range(len(led_matrix)):
         for j in range(len(led_matrix[i])):
             strip.set_pixel(led_matrix[i][j], white)
-            time.sleep(0.05)
+            time.sleep(0.005)
             print("Light ", i, " is on" )
             strip.show()
-turnOn()
+#turnOn()
+
+place = [0,0,0,0,0,0]
+
+def displayHex():
+    while place != [15,15,15,15,15,15]:
+        if place[0] < 15:
+            place[0] += 1
+        elif place[0] == 15:
+            place[0] = 0
+            if place[1] < 15:
+                place[1] += 1
+            elif place[1] == 15:
+                place[1] = 0
+                if place[2] < 15:
+                    place[2] += 1
+                elif place[2] == 15:
+                    place[2] = 0
+                    if place[3] < 15:
+                        place[3] += 1
+                    elif place[3] == 15:
+                        place[3] = 0
+                        if place[4] < 15:
+                            place[4] += 1
+                        elif place[4] == 15:
+                            place[4] = 0
+                            if place[5] < 15:
+                                place[5] += 1
+                            elif place[5] == 15:
+                                place[5] = 0
+        for i in range(136):
+            strip.set_pixel(i, red)
+        
+        strip.set_pixel(led_matrix[0][place[0]], white)
+        strip.set_pixel(led_matrix[1][place[1]], white)
+        strip.set_pixel(led_matrix[2][place[2]], white)
+        strip.set_pixel(led_matrix[3][place[3]], white)
+        strip.set_pixel(led_matrix[4][place[4]], white)
+        strip.set_pixel(led_matrix[5][place[5]], white)
+        strip.show()
+        time.sleep(0.9)
+
+
+displayHex()
+           
 
 #Pause to allow program to be stopped before
 time.sleep(2)
