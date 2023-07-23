@@ -56,45 +56,29 @@ def turnOn():
             strip.show()
 #turnOn()
 
-place = [0,0,0,0,0,0]
+place = [0, 0, 0, 0, 0, 0]
+
+def increment_place(index):
+    if place[index] < 15:
+        place[index] += 1
+    else:
+        place[index] = 0
+        increment_place(index - 1)
 
 def displayHex():
-    while place != [15,15,15,15,15,15]:
-        if place[0] < 15:
-            place[0] += 1
-        elif place[0] == 15:
-            place[0] = 0
-            if place[1] < 15:
-                place[1] += 1
-            elif place[1] == 15:
-                place[1] = 0
-                if place[2] < 15:
-                    place[2] += 1
-                elif place[2] == 15:
-                    place[2] = 0
-                    if place[3] < 15:
-                        place[3] += 1
-                    elif place[3] == 15:
-                        place[3] = 0
-                        if place[4] < 15:
-                            place[4] += 1
-                        elif place[4] == 15:
-                            place[4] = 0
-                            if place[5] < 15:
-                                place[5] += 1
-                            elif place[5] == 15:
-                                place[5] = 0
+    while place != [15, 15, 15, 15, 15, 15]:
+        reverse_place = place[::-1]
         for i in range(136):
             strip.set_pixel(i, red)
-        
-        strip.set_pixel(led_matrix[0][place[0]], white)
-        strip.set_pixel(led_matrix[1][place[1]], white)
-        strip.set_pixel(led_matrix[2][place[2]], white)
-        strip.set_pixel(led_matrix[3][place[3]], white)
-        strip.set_pixel(led_matrix[4][place[4]], white)
-        strip.set_pixel(led_matrix[5][place[5]], white)
+
+        for i, p in enumerate(reverse_place):
+            strip.set_pixel(led_matrix[i][p], white)
+
         strip.show()
         time.sleep(0.9)
+
+        # Increment the place values starting from the last element
+        increment_place(len(place) - 1)
 
 
 displayHex()
