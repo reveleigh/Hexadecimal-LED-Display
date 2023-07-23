@@ -80,9 +80,33 @@ def displayHex():
         # Increment the place values starting from the last element
         increment_place(len(place) - 1)
 
+#displayHex()
 
-displayHex()
-           
+def getPlace(r,g,b):
+    p1 = r // 16
+    p2 = r % 16
+    p3 = g // 16
+    p4 = g % 16
+    p5 = b // 16
+    p6 = b % 16
+    place[0] = p1
+    place[1] = p2
+    place[2] = p3
+    place[3] = p4
+    place[4] = p5
+    place[5] = p6
+    for i in range(96, 136):
+        strip.set_pixel(i, (r,g,b))
+    strip.set_pixel(led_matrix[0][place[5]], white)
+    strip.set_pixel(led_matrix[1][place[4]], white)
+    strip.set_pixel(led_matrix[2][place[3]], white)
+    strip.set_pixel(led_matrix[3][place[2]], white)
+    strip.set_pixel(led_matrix[4][place[1]], white)
+    strip.set_pixel(led_matrix[5][place[0]], white)
+    strip.show()
+
+    print(place)
+getPlace(243, 189, 254)
 
 #Pause to allow program to be stopped before
 time.sleep(2)
