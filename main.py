@@ -124,7 +124,38 @@ def cycle_through_spectrum(interval):
       
         
         time.sleep(interval)
-cycle_through_spectrum(1)
+#cycle_through_spectrum(1)
+
+color = [0, 0, 0]
+def find_colour(r,g,b):
+    while color != [r, g, b]:
+        if color[0] != r:
+            if color[0] < r:
+                color[0] += 1
+            else:
+                color[0] -= 1
+        if color[1] != g:
+            if color[1] < g:
+                color[1] += 1
+            else:
+                color[1] -= 1
+        if color[2] != b:
+            if color[2] < b:
+                color[2] += 1
+            else:
+                color[2] -= 1
+        getPlace(color[0], color[1], color[2])       
+
+find_colour(255,0,0)
+time.sleep(2)  
+find_colour(0,255,0)
+time.sleep(2)  
+find_colour(255,0,255)
+time.sleep(2)  
+find_colour(0,0,0)
+   
+
+
 
 #Pause to allow program to be stopped before
 time.sleep(2)
@@ -157,3 +188,4 @@ async def index(request, response):
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
+
