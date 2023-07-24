@@ -10,6 +10,7 @@ import _thread
 import tinyweb
 import ujson
 
+
 # Define SSID and password for the access point
 SSID = "Hexadecimal Clock"
 PASSWORD = "123456789"
@@ -33,8 +34,9 @@ numpix = 136
 strip = Neopixel(numpix, 0, 22, "GRB")
 red = (255, 0, 0)
 off = (0,0,0)
+green = (0,255,0)
+blue = (0,0,255)
 white = (255, 255, 255)
-blue = (0,0,50)
 orange = (255, 50, 0)
 strip.brightness(100)
 
@@ -83,6 +85,8 @@ def displayHex():
 #displayHex()
 
 def getPlace(r,g,b):
+    for i in range(96):
+        strip.set_pixel(i, off)
     p1 = r // 16
     p2 = r % 16
     p3 = g // 16
@@ -97,6 +101,19 @@ def getPlace(r,g,b):
     place[5] = p6
     for i in range(96, 136):
         strip.set_pixel(i, (r,g,b))
+    for i in range(p1):
+        strip.set_pixel(led_matrix[5][i], red)
+    for i in range(p2):
+        strip.set_pixel(led_matrix[4][i], red)
+    for i in range(p3):
+        strip.set_pixel(led_matrix[3][i], green)
+    for i in range(p4):
+        strip.set_pixel(led_matrix[2][i], green)
+    for i in range(p5):
+        strip.set_pixel(led_matrix[1][i], blue)
+    for i in range(p6):
+        strip.set_pixel(led_matrix[0][i], blue)
+
     strip.set_pixel(led_matrix[0][place[5]], white)
     strip.set_pixel(led_matrix[1][place[4]], white)
     strip.set_pixel(led_matrix[2][place[3]], white)
@@ -106,7 +123,28 @@ def getPlace(r,g,b):
     strip.show()
 
     print(place)
-getPlace(243, 189, 254)
+
+def cycle_through_spectrum(interval):
+    r, g, b = 255, 0, 0  # Starting RGB values (Red)
+    
+    while True:
+        getPlace(r, g, b)
+        if r == 255 and g !=255 and b == 0:
+            g += 1
+        elif r != 0 and g == 255 and b == 0:
+            r -= 1
+        elif g == 255 and b != 255 and r == 0:
+            b += 1
+        elif g != 0 and b == 255 and r == 0:
+            g -= 1
+        elif b == 255 and r != 255 and g == 0:
+            r += 1
+        elif b != 0 and r == 255 and g == 0:
+            b -= 1
+      
+        
+        time.sleep(interval)
+cycle_through_spectrum(1)
 
 #Pause to allow program to be stopped before
 time.sleep(2)
