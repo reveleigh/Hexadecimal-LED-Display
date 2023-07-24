@@ -127,24 +127,15 @@ def cycle_through_spectrum(interval):
 #cycle_through_spectrum(1)
 
 color = [0, 0, 0]
-def find_colour(r,g,b):
+def find_colour(r, g, b):
+    global color
+
     while color != [r, g, b]:
-        if color[0] != r:
-            if color[0] < r:
-                color[0] += 1
-            else:
-                color[0] -= 1
-        if color[1] != g:
-            if color[1] < g:
-                color[1] += 1
-            else:
-                color[1] -= 1
-        if color[2] != b:
-            if color[2] < b:
-                color[2] += 1
-            else:
-                color[2] -= 1
-        getPlace(color[0], color[1], color[2])       
+        for i in range(3):
+            if color[i] != [r, g, b][i]:
+                color[i] += 1 if [r, g, b][i] > color[i] else -1
+        getPlace(*color)
+
 
 find_colour(255,0,0)
 time.sleep(2)  
@@ -164,8 +155,7 @@ time.sleep(2)
 # Start up a tiny web server
 app = tinyweb.webserver()
 
-# Serve a simple Hello World! response when / is called
-# and turn the LED on/off using toggle()
+# Routes
 @app.route('/')
 async def index(request, response):
     # Start HTTP response with content-type text/html
