@@ -84,45 +84,25 @@ def displayHex():
 
 #displayHex()
 
-def getPlace(r,g,b):
+def getPlace(r, g, b):
     for i in range(96):
         strip.set_pixel(i, off)
-    p1 = r // 16
-    p2 = r % 16
-    p3 = g // 16
-    p4 = g % 16
-    p5 = b // 16
-    p6 = b % 16
-    place[0] = p1
-    place[1] = p2
-    place[2] = p3
-    place[3] = p4
-    place[4] = p5
-    place[5] = p6
+
+    place = [r // 16, r % 16, g // 16, g % 16, b // 16, b % 16]
+
     for i in range(96, 136):
-        strip.set_pixel(i, (r,g,b))
-    for i in range(p1):
-        strip.set_pixel(led_matrix[5][i], red)
-    for i in range(p2):
-        strip.set_pixel(led_matrix[4][i], red)
-    for i in range(p3):
-        strip.set_pixel(led_matrix[3][i], green)
-    for i in range(p4):
-        strip.set_pixel(led_matrix[2][i], green)
-    for i in range(p5):
-        strip.set_pixel(led_matrix[1][i], blue)
-    for i in range(p6):
-        strip.set_pixel(led_matrix[0][i], blue)
+        strip.set_pixel(i, (r, g, b))
 
-    strip.set_pixel(led_matrix[0][place[5]], white)
-    strip.set_pixel(led_matrix[1][place[4]], white)
-    strip.set_pixel(led_matrix[2][place[3]], white)
-    strip.set_pixel(led_matrix[3][place[2]], white)
-    strip.set_pixel(led_matrix[4][place[1]], white)
-    strip.set_pixel(led_matrix[5][place[0]], white)
+    for idx, color in enumerate([red, red, green, green, blue, blue]):
+        for i in range(place[idx]):
+            strip.set_pixel(led_matrix[5 - idx][i], color)
+
+    for idx, color in enumerate([white, white, white, white, white, white]):
+        strip.set_pixel(led_matrix[idx][place[5 - idx]], color)
+
     strip.show()
-
     print(place)
+
 
 def cycle_through_spectrum(interval):
     r, g, b = 255, 0, 0  # Starting RGB values (Red)
