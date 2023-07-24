@@ -40,6 +40,39 @@ white = (255, 255, 255)
 orange = (255, 50, 0)
 strip.brightness(100)
 
+def rainbow():
+    red = (255, 0, 0)
+    orange = (255, 50, 0)
+    yellow = (255, 100, 0)
+    green = (0, 255, 0)
+    blue = (0, 0, 255)
+    indigo = (100, 0, 90)
+    violet = (200, 0, 100)
+    colors_rgb = [red, orange, yellow, green, blue, indigo, violet]
+
+    colors = colors_rgb
+ 
+    step = round(numpix / len(colors))
+    current_pixel = 0
+
+    for color1, color2 in zip(colors, colors[1:]):
+        strip.set_pixel_line_gradient(current_pixel, current_pixel + step, color1, color2)
+        current_pixel += step
+
+    strip.set_pixel_line_gradient(current_pixel, numpix - 1, violet, red)
+    
+    start_time = time.time()  # record the start time
+    total_time = 10  # set the total time allowed in seconds
+
+    while (time.time() - start_time) < total_time:
+        strip.rotate_right(1)
+        time.sleep(0.042)
+        strip.show()
+
+    for i in range(numpix):
+        strip.set_pixel(i, off)       
+    strip.show()
+
 # turn off all leds
 def turnOff():
     for i in range(numpix):
@@ -60,29 +93,41 @@ def turnOn():
 
 place = [0, 0, 0, 0, 0, 0]
 
-def increment_place(index):
-    if place[index] < 15:
+def increment_place(index,base):
+    if place[index] < base:
         place[index] += 1
     else:
         place[index] = 0
-        increment_place(index - 1)
+        increment_place(index - 1,base)
 
-def displayHex():
-    while place != [15, 15, 15, 15, 15, 15]:
+def displayHex(base):
+    while True:
         reverse_place = place[::-1]
         for i in range(136):
             strip.set_pixel(i, red)
+        for i in range(6):
+            for x in range(base+1, 16):
+                strip.set_pixel(led_matrix[i][x], off)
 
         for i, p in enumerate(reverse_place):
             strip.set_pixel(led_matrix[i][p], white)
 
         strip.show()
-        time.sleep(0.9)
+        time.sleep(0.1)
 
         # Increment the place values starting from the last element
-        increment_place(len(place) - 1)
+        increment_place(len(place) - 1,base)
+        if place == [base, base, base, base, base, base]:
+            for i in range(base):
+                strip.set_pixel(led_matrix[0][i],red)
+            strip.set_pixel(led_matrix[0][base], white)
+            strip.show()
+            print("Got here")
+            time.sleep(1)
+            rainbow()
+            break
 
-#displayHex()
+displayHex(1)
 
 def getPlace(r, g, b):
     for i in range(96):
@@ -136,14 +181,13 @@ def find_colour(r, g, b):
                 color[i] += 1 if [r, g, b][i] > color[i] else -1
         getPlace(*color)
 
-
-find_colour(255,0,0)
-time.sleep(2)  
-find_colour(0,255,0)
-time.sleep(2)  
-find_colour(255,0,255)
-time.sleep(2)  
-find_colour(0,0,0)
+#find_colour(255,0,0)
+#time.sleep(2)  
+#find_colour(0,255,0)
+#time.sleep(2)  
+#find_colour(255,0,255)
+#time.sleep(2)  
+#find_colour(0,0,0)
    
 
 
@@ -178,4 +222,6 @@ async def index(request, response):
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
+
+
 
