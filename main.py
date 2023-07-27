@@ -32,7 +32,6 @@ print(AP.ifconfig())
 # Setting up Neopixel object
 NUMPIX = 136
 STRIP = Neopixel(NUMPIX, 0, 22, "GRB")
-
 OFF = (0,0,0)
 WHITE = (255, 255, 255)
 
@@ -48,13 +47,10 @@ STRIP.brightness(100)
 
 def rainbow():
     colors_rgb = [RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET]
-
-    colors = colors_rgb
- 
-    step = round(NUMPIX / len(colors))
+    step = round(NUMPIX / len(colors_rgb))
     current_pixel = 0
 
-    for color1, color2 in zip(colors, colors[1:]):
+    for color1, color2 in zip(colors_rgb, colors_rgb[1:]):
         STRIP.set_pixel_line_gradient(current_pixel, current_pixel + step, color1, color2)
         current_pixel += step
 
@@ -88,7 +84,6 @@ def turnOn():
             time.sleep(0.005)
             print("Light ", i, " is on" )
             STRIP.show()
-#turnOn()
 
 place = [15, 15, 15, 0, 0, 0]
 
@@ -126,9 +121,7 @@ def displayHex(base):
             rainbow()
             break
 
-while True:
-    rainbow()
-
+# Function to get the place of the RGB value
 def getPlace(r, g, b):
     for i in range(96):
         STRIP.set_pixel(i, OFF)
@@ -148,10 +141,9 @@ def getPlace(r, g, b):
     STRIP.show()
     print(place)
 
-
+# Function to cycle through the spectrum
 def cycle_through_spectrum(interval):
-    r, g, b = 255, 0, 0  # Starting RGB values (Red)
-    
+    r, g, b = 255, 0, 0  # Starting RGB values (Red) 
     while True:
         getPlace(r, g, b)
         if r == 255 and g !=255 and b == 0:
@@ -165,11 +157,11 @@ def cycle_through_spectrum(interval):
         elif b == 255 and r != 255 and g == 0:
             r += 1
         elif b != 0 and r == 255 and g == 0:
-            b -= 1
-      
-        
+            b -= 1  
         time.sleep(interval)
-#cycle_through_spectrum(0.1)
+
+# Function to display colour for given RGB values
+# Starts with a global to retain the last color set
 
 COLOR = [0, 0, 0]
 def find_colour(r, g, b):
@@ -181,20 +173,8 @@ def find_colour(r, g, b):
                 COLOR[i] += 1 if [r, g, b][i] > COLOR[i] else -1
         getPlace(*COLOR)
 
-#find_colour(255,0,0)
-#time.sleep(2)  
-#find_colour(0,255,0)
-#time.sleep(2)  
-#find_colour(255,0,255)
-#time.sleep(2)  
-#find_colour(0,0,0)
-   
-
-
-
-#Pause to allow program to be stopped before
+# Pause for 2 seconds
 time.sleep(2)
-
 
 # Start up a tiny web server
 app = tinyweb.webserver()
@@ -217,7 +197,6 @@ async def index(request, response):
         </html>
     ''')
     print("home")
-
 
 
 # Run the web server as the sole process
