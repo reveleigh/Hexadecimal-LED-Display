@@ -10,6 +10,8 @@ import _thread
 import tinyweb
 import ujson
 
+#Set intial option to off
+OPTION = 0
 
 # Define SSID and password for the access point
 SSID = "Hexadecimal Clock"
@@ -72,9 +74,7 @@ def rainbow():
 def turnOff():
     for i in range(NUMPIX):
         STRIP.set_pixel(i, OFF)
-        time.sleep(0.1)
-        print("Light ", i, " is off" )
-        STRIP.show()
+    STRIP.show()
 
 # Run through all leds
 def turnOn():
@@ -176,6 +176,21 @@ def find_colour(r, g, b):
 # Pause for 2 seconds
 time.sleep(2)
 
+def options():
+    while True:
+        time.sleep(1)
+        if OPTION == 0:
+            turnOff()
+        elif OPTION == 1:
+            turnOn()
+        else:
+            pass
+        print(OPTION)
+
+        
+# Start a new thread 
+_thread.start_new_thread(options,())
+
 # Start up a tiny web server
 app = tinyweb.webserver()
 
@@ -192,12 +207,31 @@ async def index(request, response):
                 <title>Hexadecimal Display</title>
             </head>
             <body>
-                        Hello
+            <a href="/on" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Display On</button></a>  
             </body>
         </html>
     ''')
     print("home")
 
+@app.route('/on')
+async def index(request, response):
+    try:
+        global OPTION
+        file = open("html/on.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
+        # Send actual HTML page
+        await response.send(html)
+
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
+
+    OPTION = 1
+    print(OPTION)
+    print("Display on")
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
