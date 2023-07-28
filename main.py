@@ -85,7 +85,7 @@ def turnOn():
             print("Light ", i, " is on" )
             STRIP.show()
 
-place = [15, 15, 15, 0, 0, 0]
+place = [0, 0, 0, 0, 0, 0]
 
 def increment_place(index,base):
     if place[index] < base:
@@ -117,7 +117,7 @@ def displayHex(base):
             STRIP.set_pixel(led_matrix[0][base], WHITE)
             STRIP.show()
             print("Got here")
-            time.sleep(1)
+            time.sleep(0.2)
             rainbow()
             break
 
@@ -181,8 +181,14 @@ def options():
         time.sleep(1)
         if OPTION == 0:
             turnOff()
-        elif OPTION == 1:
-            turnOn()
+        elif OPTION == 2:
+            turnOff()
+        elif OPTION == 3:
+            displayHex(16)
+        elif OPTION == 4:
+            cycle_through_spectrum(0.1)
+        elif OPTION == 5:
+            rainbow()
         else:
             pass
         print(OPTION)
@@ -217,7 +223,7 @@ async def index(request, response):
 async def index(request, response):
     try:
         global OPTION
-        file = open("html/on.html")
+        file = open("html/back.html")
         html = file.read()
         file.close()
         # Start HTTP response with content-type text/html
@@ -232,6 +238,86 @@ async def index(request, response):
     OPTION = 1
     print(OPTION)
     print("Display on")
+
+@app.route('/off')
+async def index(request, response):
+    try:
+        global OPTION
+        file = open("html/back.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
+        # Send actual HTML page
+        await response.send(html)
+
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
+
+    OPTION = 2
+    print(OPTION)
+    print("Display off")
+
+@app.route('/hex')
+async def index(request, response):
+    try:
+        global OPTION
+        file = open("html/back.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
+        # Send actual HTML page
+        await response.send(html)
+
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
+
+    OPTION = 3
+    print(OPTION)
+    print("Display Hexadecimal Count")
+
+@app.route('/spectrum')
+async def index(request, response):
+    try:
+        global OPTION
+        file = open("html/back.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
+        # Send actual HTML page
+        await response.send(html)
+
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
+
+    OPTION = 4
+    print(OPTION)
+    print("Display Colour Spectrum")
+
+@app.route('/spectrum')
+async def index(request, response):
+    try:
+        global OPTION
+        file = open("html/back.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
+        # Send actual HTML page
+        await response.send(html)
+
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
+
+    OPTION = 5
+    print(OPTION)
+    print("Display Rainbow")
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
