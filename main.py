@@ -81,7 +81,7 @@ def turnOn():
     global OPTION
     for i in range(len(led_matrix)):
         for j in range(len(led_matrix[i])):
-            if OPTION = 1:
+            if OPTION == 1:
                 STRIP.set_pixel(led_matrix[i][j], WHITE)
                 time.sleep(0.005)
                 print("Light ", i, " is on" )
@@ -120,13 +120,14 @@ def displayHex(base):
             increment_place(len(place) - 1,base)
             if place == [base, base, base, base, base, base]:
                 for i in range(base):
-                    STRIP.set_pixel(led_matrix[0][i],RED)
-                STRIP.set_pixel(led_matrix[0][base], WHITE)
-                STRIP.show()
+                    strip.set_pixel(led_matrix[0][i],red)
+                strip.set_pixel(led_matrix[0][base], white)
+                strip.show()
                 print("Got here")
-                time.sleep(0.2)
+                time.sleep(1)
                 rainbow()
                 break
+
         else:
             turnOff()
             break
@@ -200,7 +201,7 @@ def options():
         elif OPTION == 2:
             turnOff()
         elif OPTION == 3:
-            displayHex(16)
+            displayHex(15)
         elif OPTION == 4:
             cycle_through_spectrum(0.1)
         elif OPTION == 5:
@@ -342,6 +343,7 @@ async def index(request, response):
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
+
 
 
 
