@@ -78,12 +78,17 @@ def turnOff():
 
 # Run through all leds
 def turnOn():
+    global OPTION
     for i in range(len(led_matrix)):
         for j in range(len(led_matrix[i])):
-            STRIP.set_pixel(led_matrix[i][j], WHITE)
-            time.sleep(0.005)
-            print("Light ", i, " is on" )
-            STRIP.show()
+            if OPTION = 1:
+                STRIP.set_pixel(led_matrix[i][j], WHITE)
+                time.sleep(0.005)
+                print("Light ", i, " is on" )
+                STRIP.show()
+            else:
+                break
+    OPTION = 0
 
 place = [0, 0, 0, 0, 0, 0]
 
@@ -179,8 +184,8 @@ time.sleep(2)
 def options():
     while True:
         time.sleep(1)
-        if OPTION == 0:
-            turnOff()
+        if OPTION == 1:
+            turnOn()
         elif OPTION == 2:
             turnOff()
         elif OPTION == 3:
