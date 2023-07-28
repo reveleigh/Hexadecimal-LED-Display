@@ -101,30 +101,36 @@ def increment_place(index,base):
 
 def displayHex(base):
     while True:
-        reverse_place = place[::-1]
-        for i in range(136):
-            STRIP.set_pixel(i, RED)
-        for i in range(6):
-            for x in range(base+1, 16):
-                STRIP.set_pixel(led_matrix[i][x], OFF)
+        global OPTION
+        if OPTION == 3:
+            reverse_place = place[::-1]
+            for i in range(136):
+                STRIP.set_pixel(i, RED)
+            for i in range(6):
+                for x in range(base+1, 16):
+                    STRIP.set_pixel(led_matrix[i][x], OFF)
 
-        for i, p in enumerate(reverse_place):
-            STRIP.set_pixel(led_matrix[i][p], WHITE)
+            for i, p in enumerate(reverse_place):
+                STRIP.set_pixel(led_matrix[i][p], WHITE)
 
-        STRIP.show()
-        time.sleep(0.9)
-
-        # Increment the place values starting from the last element
-        increment_place(len(place) - 1,base)
-        if place == [base, base, base, base, base, base]:
-            for i in range(base):
-                STRIP.set_pixel(led_matrix[0][i],RED)
-            STRIP.set_pixel(led_matrix[0][base], WHITE)
             STRIP.show()
-            print("Got here")
-            time.sleep(0.2)
-            rainbow()
+            time.sleep(0.9)
+
+            # Increment the place values starting from the last element
+            increment_place(len(place) - 1,base)
+            if place == [base, base, base, base, base, base]:
+                for i in range(base):
+                    STRIP.set_pixel(led_matrix[0][i],RED)
+                STRIP.set_pixel(led_matrix[0][base], WHITE)
+                STRIP.show()
+                print("Got here")
+                time.sleep(0.2)
+                rainbow()
+                break
+        else:
+            turnOff()
             break
+
 
 # Function to get the place of the RGB value
 def getPlace(r, g, b):
@@ -148,22 +154,27 @@ def getPlace(r, g, b):
 
 # Function to cycle through the spectrum
 def cycle_through_spectrum(interval):
+    global OPTION
     r, g, b = 255, 0, 0  # Starting RGB values (Red) 
     while True:
-        getPlace(r, g, b)
-        if r == 255 and g !=255 and b == 0:
-            g += 1
-        elif r != 0 and g == 255 and b == 0:
-            r -= 1
-        elif g == 255 and b != 255 and r == 0:
-            b += 1
-        elif g != 0 and b == 255 and r == 0:
-            g -= 1
-        elif b == 255 and r != 255 and g == 0:
-            r += 1
-        elif b != 0 and r == 255 and g == 0:
-            b -= 1  
-        time.sleep(interval)
+        if OPTION == 4:
+            getPlace(r, g, b)
+            if r == 255 and g !=255 and b == 0:
+                g += 1
+            elif r != 0 and g == 255 and b == 0:
+                r -= 1
+            elif g == 255 and b != 255 and r == 0:
+                b += 1
+            elif g != 0 and b == 255 and r == 0:
+                g -= 1
+            elif b == 255 and r != 255 and g == 0:
+                r += 1
+            elif b != 0 and r == 255 and g == 0:
+                b -= 1  
+            time.sleep(interval)
+        else:
+            turnOff()
+            break
 
 # Function to display colour for given RGB values
 # Starts with a global to retain the last color set
@@ -219,6 +230,11 @@ async def index(request, response):
             </head>
             <body>
             <a href="/on" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Display On</button></a>  
+            <a href="/off" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Display Off</button></a>  
+            <a href="/hex" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Count in Hex</button></a>  
+            <a href="/spectrum" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Display Colour Spectrum</button></a>  
+            <a href="/rainbow" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Rainbow</button></a>  
+           
             </body>
         </html>
     ''')
@@ -304,7 +320,7 @@ async def index(request, response):
     print(OPTION)
     print("Display Colour Spectrum")
 
-@app.route('/spectrum')
+@app.route('/rainbow')
 async def index(request, response):
     try:
         global OPTION
