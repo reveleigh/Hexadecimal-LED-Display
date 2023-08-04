@@ -220,26 +220,20 @@ app = tinyweb.webserver()
 # Routes
 @app.route('/')
 async def index(request, response):
-    # Start HTTP response with content-type text/html
-    await response.start_html()
-    # Send actual HTML page
-    await response.send('''
-        <!DOCTYPE html>
-        <html>
-            <head>
-                <title>Hexadecimal Display</title>
-            </head>
-            <body>
-            <a href="/on" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Display On</button></a>  
-            <a href="/off" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Display Off</button></a>  
-            <a href="/hex" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Count in Hex</button></a>  
-            <a href="/spectrum" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Display Colour Spectrum</button></a>  
-            <a href="/rainbow" style="margin-bottom: 50px; width:100%;"><button style="font-size:4rem; font-family: verdana; width:100%; height: 150px; background-color: #ffe6e6; color: black; border-radius: 15px;">Rainbow</button></a>  
-           
-            </body>
-        </html>
-    ''')
-    print("home")
+    try:
+        file = open("html/index.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
+        # Send actual HTML page
+        await response.send(html)
+
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
+
+    print("Home page")
 
 @app.route('/on')
 async def index(request, response):
