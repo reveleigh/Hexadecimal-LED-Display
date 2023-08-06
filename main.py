@@ -47,6 +47,9 @@ INDIGO = (100, 0, 90)
 VIOLET = (200, 0, 100)
 STRIP.brightness(100)
 
+# Set base global variable
+BASE = 15
+
 def rainbow():
     colors_rgb = [RED, ORANGE, YELLOW, GREEN, BLUE, INDIGO, VIOLET]
     step = round(NUMPIX / len(colors_rgb))
@@ -99,7 +102,7 @@ def increment_place(index,base):
         place[index] = 0
         increment_place(index - 1,base)
 
-def displayHex(base):
+def displayHex():
     while True:
         global OPTION
         if OPTION == 3:
@@ -107,7 +110,7 @@ def displayHex(base):
             for i in range(136):
                 STRIP.set_pixel(i, RED)
             for i in range(6):
-                for x in range(base+1, 16):
+                for x in range(BASE+1, 16):
                     STRIP.set_pixel(led_matrix[i][x], OFF)
 
             for i, p in enumerate(reverse_place):
@@ -117,11 +120,11 @@ def displayHex(base):
             time.sleep(0.9)
 
             # Increment the place values starting from the last element
-            increment_place(len(place) - 1,base)
-            if place == [base, base, base, base, base, base]:
-                for i in range(base):
+            increment_place(len(place) - 1,BASE)
+            if place == [BASE, BASE, BASE, BASE, BASE, BASE]:
+                for i in range(BASE):
                     strip.set_pixel(led_matrix[0][i],red)
-                strip.set_pixel(led_matrix[0][base], white)
+                strip.set_pixel(led_matrix[0][BASE], white)
                 strip.show()
                 print("Got here")
                 time.sleep(1)
@@ -201,7 +204,7 @@ def options():
         elif OPTION == 2:
             turnOff()
         elif OPTION == 3:
-            displayHex(15)
+            displayHex()
         elif OPTION == 4:
             cycle_through_spectrum(0.1)
         elif OPTION == 5:
@@ -221,6 +224,8 @@ app = tinyweb.webserver()
 @app.route('/')
 async def index(request, response):
     try:
+        global OPTION
+        global BASE
         file = open("html/index.html")
         html = file.read()
         file.close()
@@ -228,6 +233,16 @@ async def index(request, response):
         await response.start_html()
         # Send actual HTML page
         await response.send(html)
+
+        query_string = request.query_string.decode('utf-8')
+        if query_string == "":
+            return
+        else:
+            key, value = query_string.split('=')
+            if key == "base":
+                BASE = int(value)
+                print("Base set to: ", BASE)
+                OPTION = 3
 
     except Exception as e:
         print("An error occurred:", e)
@@ -279,7 +294,7 @@ async def index(request, response):
 async def index(request, response):
     try:
         global OPTION
-        file = open("html/back.html")
+        file = open("html/hex.html")
         html = file.read()
         file.close()
         # Start HTTP response with content-type text/html
@@ -291,9 +306,7 @@ async def index(request, response):
         print("An error occurred:", e)
         await response.send("An error occurred: {}".format(e))
 
-    OPTION = 3
-    print(OPTION)
-    print("Display Hexadecimal Count")
+    print("Display Number base options")
 
 @app.route('/spectrum')
 async def index(request, response):
