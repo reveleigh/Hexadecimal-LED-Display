@@ -123,12 +123,13 @@ def displayHex():
             increment_place(len(place) - 1,BASE)
             if place == [BASE, BASE, BASE, BASE, BASE, BASE]:
                 for i in range(BASE):
-                    strip.set_pixel(led_matrix[0][i],red)
-                strip.set_pixel(led_matrix[0][BASE], white)
-                strip.show()
-                print("Got here")
+                    STRIP.set_pixel(led_matrix[0][i],RED)
+                STRIP.set_pixel(led_matrix[0][BASE], WHITE)
+                STRIP.show()
                 time.sleep(1)
                 rainbow()
+                turnOff()
+                OPTION = 2
                 break
 
         else:
@@ -350,8 +351,3 @@ async def index(request, response):
 
 # Run the web server as the sole process
 app.run(host="0.0.0.0", port=80)
-
-
-
-
-
