@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hexadecimal Display</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 50px;
+        font-family: verdana;
+        color: #231f20;
+        background-color: #efe6dd;
+      }
+
+      a {
+        margin-bottom: 50px;
+        width: 100%;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      button {
+        font-size: 4rem;
+        font-family: verdana;
+        width: 100%;
+        height: 150px;
+        background-color: #bb4430;
+        color: black;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+      }
+      #red-button {
+        background-color: rgb(255, 0, 0);
+      }
+
+      #orange-button {
+        background-color: rgb(255, 165, 0);
+      }
+
+      #yellow-button {
+        background-color: rgb(255, 255, 0);
+      }
+
+      #green-yellow-button {
+        background-color: rgb(173, 255, 47);
+      }
+
+      #green-button {
+        background-color: rgb(0, 128, 0);
+      }
+
+      #green-cyan-button {
+        background-color: rgb(0, 255, 255);
+      }
+
+      #cyan-button {
+        background-color: rgb(0, 191, 255);
+      }
+
+      #blue-cyan-button {
+        background-color: rgb(0, 139, 139);
+      }
+
+      #blue-button {
+        background-color: rgb(0, 0, 255);
+      }
+
+      #blue-magenta-button {
+        background-color: rgb(139, 0, 139);
+      }
+
+      #magenta-button {
+        background-color: rgb(255, 0, 255);
+      }
+
+      #red-magenta-button {
+        background-color: rgb(255, 20, 147);
+      }
+
+      #white-button {
+        background-color: rgb(255, 255, 255);
+      }
+
+      #warm-white-button {
+        background-color: rgb(245, 222, 179);
+      }
+
+      #cool-white-button {
+        background-color: rgb(173, 216, 230);
+      }
+
+      #off-button {
+        background-color: rgb(0, 0, 0);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="?r=255&g=0&b=0">
+      <button id="red-button">Red</button>
+    </a>
+    <a href="?r=255&g=165&b=0">
+      <button id="orange-button">Orange</button>
+    </a>
+    <a href="?r=255&g=255&b=0">
+      <button id="yellow-button">Yellow</button>
+    </a>
+    <a href="?r=173&g=0&b=47">
+      <button id="green-yellow-button">Green Yellow</button>
+    </a>
+    <a href="?r=0&g=255&b=0">
+      <button id="green-button">Green</button>
+    </a>
+    <a href="?r=0&g=255&b=255">
+      <button id="green-cyan-button">Green Cyan</button>
+    </a>
+    <a href="?r=0&g=191&b=255">
+      <button id="cyan-button">Cyan</button>
+    </a>
+    <a href="?r=0&g=139&b=139">
+      <button id="blue-cyan-button">Blue Cyan</button>
+    </a>
+    <a href="?r=0&g=0&b=255">
+      <button id="blue-button">Blue</button>
+    </a>
+    <a href="?r=139&g=0&b=139">
+      <button id="blue-magenta-button">Blue Magenta</button>
+    </a>
+    <a href="?r=255&g=0&b=255">
+      <button id="magenta-button">Magenta</button>
+    </a>
+    <a href="?r=255&g=20&b=147">
+      <button id="red-magenta-button">Red Magenta</button>
+    </a>
+    <a href="?r=255&g=255&b=255">
+      <button id="white-button">White</button>
+    </a>
+    <a href="?r=245&g=122&b=179">
+      <button id="warm-white-button">Warm White</button>
+    </a>
+    <a href="?r=173&g=216&b=230">
+      <button id="cool-white-button">Cool White</button>
+    </a>
+    <a href="?r=0&g=0&b=0">
+      <button id="off-button">Black</button>
+    </a>
+  </body>
+</html>

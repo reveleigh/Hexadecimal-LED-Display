@@ -274,7 +274,7 @@ async def index(request, response):
             b = int(b.split('=')[1])
             OPTION = 0
             turnOff()
-            find_colour(r, g, b)
+            getPlace(r, g, b)
     
     except Exception as e:
         print("An error occurred:", e)
