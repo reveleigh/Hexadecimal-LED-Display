@@ -129,7 +129,7 @@ def displayHex():
                 time.sleep(1)
                 rainbow()
                 turnOff()
-                OPTION = 2
+                OPTION = 0
                 break
 
         else:
@@ -251,6 +251,38 @@ async def index(request, response):
 
     print("Home page")
 
+@app.route('/set-color')
+async def index(request, response):
+    try:
+        global OPTION
+        file = open("html/set-color.html")
+        html = file.read()
+        file.close()
+        # Start HTTP response with content-type text/html
+        await response.start_html()
+        # Send actual HTML page
+        await response.send(html)
+
+        query_string = request.query_string.decode('utf-8')
+        if query_string == "":
+            return
+        else:
+            # Get the RGB values from the query string
+            r, g, b = query_string.split('&')
+            r = int(r.split('=')[1])
+            g = int(g.split('=')[1])
+            b = int(b.split('=')[1])
+            OPTION = 0
+            turnOff()
+            find_colour(r, g, b)
+    
+    except Exception as e:
+        print("An error occurred:", e)
+        await response.send("An error occurred: {}".format(e))
+
+    print("Set color page")
+            
+
 @app.route('/on')
 async def index(request, response):
     try:
@@ -308,6 +340,7 @@ async def index(request, response):
         await response.send("An error occurred: {}".format(e))
 
     print("Display Number base options")
+
 
 @app.route('/spectrum')
 async def index(request, response):
