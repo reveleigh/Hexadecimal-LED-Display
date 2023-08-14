@@ -200,15 +200,15 @@ time.sleep(2)
 def options():
     while True:
         time.sleep(1)
-        if OPTION == 1:
+        if OPTION == 1: # Turn on
             turnOn()
-        elif OPTION == 2:
+        elif OPTION == 2: # Turn off
             turnOff()
-        elif OPTION == 3:
+        elif OPTION == 3: # Count in number bases
             displayHex()
-        elif OPTION == 4:
+        elif OPTION == 4: # Cycle through spectrum
             cycle_through_spectrum(0.1)
-        elif OPTION == 5:
+        elif OPTION == 5: # Rainbow
             rainbow()
         else:
             pass
@@ -227,6 +227,7 @@ async def index(request, response):
     try:
         global OPTION
         global BASE
+        global place
         file = open("html/index.html")
         html = file.read()
         file.close()
@@ -240,6 +241,7 @@ async def index(request, response):
             return
         else:
             key, value = query_string.split('=')
+            place = [0, 0, 0, 0, 0, 0]
             if key == "base":
                 BASE = int(value)
                 print("Base set to: ", BASE)
@@ -255,6 +257,7 @@ async def index(request, response):
 async def index(request, response):
     try:
         global OPTION
+        OPTION = 0
         file = open("html/set-color.html")
         html = file.read()
         file.close()
@@ -272,8 +275,6 @@ async def index(request, response):
             r = int(r.split('=')[1])
             g = int(g.split('=')[1])
             b = int(b.split('=')[1])
-            OPTION = 0
-            turnOff()
             getPlace(r, g, b)
     
     except Exception as e:

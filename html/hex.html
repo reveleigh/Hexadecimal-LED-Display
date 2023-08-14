@@ -4,48 +4,83 @@
     <title>Hexadecimal Display</title>
     <style>
       body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 50px;
+        margin: 20px;
+        padding: 20px;
+        text-align: center;
         font-family: verdana;
         color: #231f20;
         background-color: #efe6dd;
+        font-size: 3rem;
       }
 
-      a {
+      h1 {
         margin-bottom: 50px;
-        width: 100%;
-        text-decoration: none;
-        color: inherit;
+        font-size: 4rem;
+      }
+
+      #button-container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 90%;
+        justify-content: center;
+        margin: 20px auto;
       }
 
       button {
-        font-size: 4rem;
-        font-family: verdana;
-        width: 100%;
-        height: 150px;
+        display: inline-block;
+        width: calc(
+          30% - 10px
+        ); /* Adjusted width calculation to account for margin */
+        height: 140px;
+        margin: 5px; /* Adjusted margin for better spacing */
+        padding: 1%;
+        font-size: 1.2em;
+        text-align: center;
         background-color: #bb4430;
         color: white;
         border: none;
-        border-radius: 15px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
         cursor: pointer;
       }
     </style>
+    <script>
+      function sendRequest(queryParams) {
+        // Perform a fetch request to the URL
+        fetch(queryParams)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+          })
+          .then((data) => {
+            console.log("Response:", data); // Handle the response data here
+          })
+          .catch((error) => {
+            console.error("Fetch Error:", error);
+          });
+      }
+    </script>
   </head>
   <body>
-    <a href="/?base=1">
-      <button>2</button>
-    </a>
-    <a href="/?base=2">
-      <button>3</button>
-    </a>
-    <a href="/?base=7">
-      <button>8</button>
-    </a>
-    <a href="/?base=15">
-      <button>16</button>
-    </a>
+    <h1>Pick a number base</h1>
+    <div id="button-container">
+      <button onclick="sendRequest('/?base=1')">2</button>
+      <button onclick="sendRequest('/?base=2')">3</button>
+      <button onclick="sendRequest('/?base=3')">4</button>
+      <button onclick="sendRequest('/?base=4')">5</button>
+      <button onclick="sendRequest('/?base=5')">6</button>
+      <button onclick="sendRequest('/?base=6')">7</button>
+      <button onclick="sendRequest('/?base=7')">8</button>
+      <button onclick="sendRequest('/?base=8')">9</button>
+      <button onclick="sendRequest('/?base=9')">10</button>
+      <button onclick="sendRequest('/?base=10')">11</button>
+      <button onclick="sendRequest('/?base=11')">12</button>
+      <button onclick="sendRequest('/?base=12')">13</button>
+      <button onclick="sendRequest('/?base=13')">14</button>
+      <button onclick="sendRequest('/?base=14')">15</button>
+      <button onclick="sendRequest('/?base=15')">16</button>
+    </div>
+    <a href="/" width="100%"><button>Back</button></a>
   </body>
 </html>

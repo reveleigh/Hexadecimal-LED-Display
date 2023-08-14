@@ -4,34 +4,42 @@
     <title>Hexadecimal Display</title>
     <style>
       body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 50px;
+        margin: 0;
+        padding: 0;
         font-family: verdana;
         color: #231f20;
         background-color: #efe6dd;
+        font-size: 3rem;
       }
 
-      a {
-        margin-bottom: 50px;
-        width: 100%;
-        text-decoration: none;
-        color: inherit;
+      h1 {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 4rem;
+      }
+
+      #button-container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 90%;
+        justify-content: center;
+        margin: 20px auto;
       }
 
       button {
-        font-size: 4rem;
-        font-family: verdana;
-        width: 100%;
-        height: 150px;
-        background-color: #bb4430;
-        color: black;
+        display: inline-block;
+        width: 22%;
+        height: 140px;
+        margin: 1%;
+        padding: 1%;
+        font-size: 1.2em;
+        text-align: center;
         border: none;
-        border-radius: 15px;
-        cursor: pointer;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
       }
+
       #red-button {
         background-color: rgb(255, 0, 0);
       }
@@ -96,17 +104,42 @@
         background-color: rgb(0, 0, 0);
         color: white;
       }
+
+      #back {
+        width: 100%;
+        height: 150px;
+        margin: 20px auto;
+        font-size: 4rem;
+        background-color: #bb4430;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+      }
+
+      #back-container {
+        width: 90%;
+        margin: 20px auto;
+        justify-content: center;
+      }
+
+      .color-slider-container {
+        display: flex;
+        flex-wrap: wrap;
+        width: 90%;
+        justify-content: center;
+        margin: 40px auto;
+      }
+
+      .color-slider {
+        width: 100%;
+        height: 20px;
+      }
     </style>
     <script>
       function sendRequest(queryParams) {
-        // Define the base URL you want to send the request to
-        const baseUrl = "https://example.com"; // Replace with your actual URL
-
-        // Construct the full URL with the provided query parameters
-        const fullUrl = baseUrl + queryParams;
-
         // Perform a fetch request to the URL
-        fetch(fullUrl)
+        fetch(queryParams)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Network response was not ok");
@@ -119,56 +152,127 @@
             console.error("Fetch Error:", error);
           });
       }
+
+      // Function to update the span values
+      function updateSpanValues() {
+        const redValue = document.getElementById("red-slider").value;
+        const greenValue = document.getElementById("green-slider").value;
+        const blueValue = document.getElementById("blue-slider").value;
+
+        document.getElementById("rVal").textContent = `${redValue}`;
+        document.getElementById("gVal").textContent = `${greenValue}`;
+        document.getElementById("bVal").textContent = `${blueValue}`;
+      }
     </script>
   </head>
   <body>
-    <a href="?r=255&g=0&b=0">
-      <button id="red-button">Red</button>
-    </a>
-    <a href="?r=255&g=165&b=0">
-      <button id="orange-button">Orange</button>
-    </a>
-    <a href="?r=255&g=255&b=0">
-      <button id="yellow-button">Yellow</button>
-    </a>
-    <a href="?r=173&g=0&b=47">
-      <button id="green-yellow-button">Green Yellow</button>
-    </a>
-    <a href="?r=0&g=255&b=0">
-      <button id="green-button">Green</button>
-    </a>
-    <a href="?r=0&g=255&b=255">
-      <button id="green-cyan-button">Green Cyan</button>
-    </a>
-    <a href="?r=0&g=191&b=255">
-      <button id="cyan-button">Cyan</button>
-    </a>
-    <a href="?r=0&g=139&b=139">
-      <button id="blue-cyan-button">Blue Cyan</button>
-    </a>
-    <a href="?r=0&g=0&b=255">
-      <button id="blue-button">Blue</button>
-    </a>
-    <a href="?r=139&g=0&b=139">
-      <button id="blue-magenta-button">Blue Magenta</button>
-    </a>
-    <a href="?r=255&g=0&b=255">
-      <button id="magenta-button">Magenta</button>
-    </a>
-    <a href="?r=255&g=20&b=147">
-      <button id="red-magenta-button">Red Magenta</button>
-    </a>
-    <a href="?r=255&g=255&b=255">
-      <button id="white-button">White</button>
-    </a>
-    <a href="?r=245&g=122&b=179">
-      <button id="warm-white-button">Warm White</button>
-    </a>
-    <a href="?r=173&g=216&b=230">
-      <button id="cool-white-button">Cool White</button>
-    </a>
-    <a href="?r=0&g=0&b=0">
-      <button id="off-button">Black</button>
-    </a>
-  </body>
+    <h1>Show Colour Values</h1>
+    <div id="button-container">
+      <button id="red-button" onclick="sendRequest('?r=255&g=0&b=0')"></button>
+      <button
+        id="orange-button"
+        onclick="sendRequest('?r=255&g=165&b=0')"
+      ></button>
+      <button
+        id="yellow-button"
+        onclick="sendRequest('?r=255&g=255&b=0')"
+      ></button>
+      <button
+        id="green-yellow-button"
+        onclick="sendRequest('?r=173&g=255&b=47')"
+      ></button>
+      <button
+        id="green-button"
+        onclick="sendRequest('?r=0&g=255&b=0')"
+      ></button>
+      <button
+        id="green-cyan-button"
+        onclick="sendRequest('?r=0&g=255&b=255')"
+      ></button>
+      <button
+        id="cyan-button"
+        onclick="sendRequest('?r=0&g=191&b=255')"
+      ></button>
+      <button
+        id="blue-cyan-button"
+        onclick="sendRequest('?r=0&g=139&b=139')"
+      ></button>
+      <button id="blue-button" onclick="sendRequest('?r=0&g=0&b=255')"></button>
+      <button
+        id="blue-magenta-button"
+        onclick="sendRequest('?r=139&g=0&b=139')"
+      ></button>
+      <button
+        id="magenta-button"
+        onclick="sendRequest('?r=255&g=0&b=255')"
+      ></button>
+      <button
+        id="red-magenta-button"
+        onclick="sendRequest('?r=255&g=20&b=147')"
+      ></button>
+      <button
+        id="white-button"
+        onclick="sendRequest('?r=255&g=255&b=255')"
+      ></button>
+      <button
+        id="warm-white-button"
+        onclick="sendRequest('?r=245&g=122&b=179')"
+      ></button>
+      <button
+        id="cool-white-button"
+        onclick="sendRequest('?r=173&g=216&b=230')"
+      ></button>
+      <button id="off-button" onclick="sendRequest('?r=0&g=0&b=0')"></button>
+    </div>
+    <div id="slider-container">
+      <!-- Red Slider -->
+      <div class="color-slider-container">
+        Red: <span id="rVal">0</span>
+        <input
+          type="range"
+          class="color-slider"
+          id="red-slider"
+          name="red-slider"
+          min="0"
+          max="255"
+          value="0"
+          onchange="sendRequest('?r=' + this.value + '&g=' + document.getElementById('green-slider').value + '&b=' + document.getElementById('blue-slider').value); updateSpanValues();"
+        />
+      </div>
+
+      <!-- Green Slider -->
+      <div class="color-slider-container">
+        Green: <span id="gVal">0</span>
+        <input
+          type="range"
+          class="color-slider"
+          id="green-slider"
+          name="green-slider"
+          min="0"
+          max="255"
+          value="0"
+          onchange="sendRequest('?r=' + document.getElementById('red-slider').value + '&g=' + this.value + '&b=' + document.getElementById('blue-slider').value); updateSpanValues();"
+        />
+      </div>
+
+      <!-- Blue Slider -->
+      <div class="color-slider-container">
+        Blue: <span id="bVal">0</span>
+        <input
+          type="range"
+          class="color-slider"
+          id="blue-slider"
+          name="blue-slider"
+          min="0"
+          max="255"
+          value="0"
+          onchange="sendRequest('?r=' + document.getElementById('red-slider').value + '&g=' + document.getElementById('green-slider').value + '&b=' + this.value); updateSpanValues();"
+        />
+      </div>
+    </div>
+    <div id="back-container">
+      <a href="/">
+        <button id="back">Back</button>
+      </a>
+    </div>
 </html>
