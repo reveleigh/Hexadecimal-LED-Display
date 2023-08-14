@@ -97,6 +97,29 @@
         color: white;
       }
     </style>
+    <script>
+      function sendRequest(queryParams) {
+        // Define the base URL you want to send the request to
+        const baseUrl = "https://example.com"; // Replace with your actual URL
+
+        // Construct the full URL with the provided query parameters
+        const fullUrl = baseUrl + queryParams;
+
+        // Perform a fetch request to the URL
+        fetch(fullUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+          })
+          .then((data) => {
+            console.log("Response:", data); // Handle the response data here
+          })
+          .catch((error) => {
+            console.error("Fetch Error:", error);
+          });
+      }
+    </script>
   </head>
   <body>
     <a href="?r=255&g=0&b=0">
