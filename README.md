@@ -1,3 +1,17 @@
 # Hexadecimal LED Display
 
-An ongoing LED project to highlight the place value of the hexadecimal numbering system
+A Raspberry Pi Pico W project that uses Micropython and Neopixels to highlight the place value of the hexadecimal numbering system.
+
+## Functionality Overview
+
+The project offers the following key functionalities:
+
+1. **Turn On**: Instantly illuminates all LEDs on the RGB matrix, creating a vibrant display.
+
+2. **Turn Off**: Swiftly turns off all LEDs, ensuring a clean and crisp matrix appearance.
+
+3. **Display Hexadecimal Numbers**: The controller can exhibit hexadecimal numbers on the matrix, counting upwards from 0 to a predefined base value. The base value can be set to your preferred number (default is 15), allowing you to explore various number bases and patterns.
+
+4. **Cycle Through Spectrum**: This feature introduces a mesmerizing color spectrum effect. The matrix cycles through a captivating range of colors, producing a dynamic and visually appealing outcome.
+
+5. **Rainbow Effect**: With this option, the matrix transforms into a vivid rainbow display. The LEDs dance through an array of colors, showcasing a delightful rainbow pattern.
