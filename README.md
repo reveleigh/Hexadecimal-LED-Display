@@ -2,6 +2,14 @@
 
 A Raspberry Pi Pico W project that uses Micropython and Neopixels to highlight the place value of the hexadecimal numbering system.
 
+Full project write can be found here: https://russelleveleigh.medium.com/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b
+
+Makes use of the following sources:
+
+Neopixel library: https://github.com/blaz-r/pi_pico_neopixel
+
+Pico W Access Point: https://github.com/recantha/PicoWAccessPoint
+
 ## Functionality Overview
 
 The project offers the following key functionalities:
