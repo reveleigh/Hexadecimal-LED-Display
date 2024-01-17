@@ -2,7 +2,7 @@
 
 A Raspberry Pi Pico W project that uses Micropython and Neopixels to highlight the place value of the hexadecimal numbering system.
 
-Full project write can be found here: https://russelleveleigh.medium.com/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b
+Full project write can be found here: [https://russelleveleigh.medium.com/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b](https://medium.com/@russelleveleigh/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b?sk=2f96e7c51a4c88aef35aaff2d7647830)
 
 Makes use of the following sources:
 
