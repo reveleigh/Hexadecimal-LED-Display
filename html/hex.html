@@ -1,60 +1,143 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Hexadecimal Display</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Number Base</title>
     <style>
+      :root {
+        --bg-color: #0d0f12;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --text-color: #f3f4f6;
+        --text-muted: #9ca3af;
+        --primary-gradient: linear-gradient(135deg, #ff4b4b, #ff7b7b);
+        --accent-color: #ff4b4b;
+      }
+
       body {
-        margin: 20px;
+        margin: 0;
         padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        box-sizing: border-box;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 440px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        padding: 30px 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
         text-align: center;
-        font-family: verdana;
-        color: #231f20;
-        background-color: #efe6dd;
-        font-size: 3rem;
       }
 
       h1 {
-        margin-bottom: 50px;
-        font-size: 4rem;
+        margin: 0 0 8px 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
       }
 
-      #button-container {
-        display: flex;
-        flex-wrap: wrap;
-        width: 90%;
-        justify-content: center;
-        margin: 20px auto;
+      p {
+        margin: 0 0 24px 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
       }
 
-      button {
-        display: inline-block;
-        width: calc(
-          30% - 10px
-        ); /* Adjusted width calculation to account for margin */
-        height: 140px;
-        margin: 5px; /* Adjusted margin for better spacing */
-        padding: 1%;
-        font-size: 1.2em;
-        text-align: center;
-        background-color: #bb4430;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .base-btn {
+        padding: 18px 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-color);
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
         cursor: pointer;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+      }
+
+      .base-btn:hover {
+        background: rgba(255, 75, 75, 0.1);
+        border-color: var(--accent-color);
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(255, 75, 75, 0.2);
+      }
+
+      .base-btn:active {
+        transform: scale(0.98);
+      }
+
+      .base-btn.selected {
+        background: var(--primary-gradient);
+        border: none;
+        color: white;
+        box-shadow: 0 6px 15px rgba(255, 75, 75, 0.3);
+      }
+
+      a {
+        text-decoration: none;
+        width: 100%;
+      }
+
+      .btn-back {
+        width: 100%;
+        padding: 16px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: transparent;
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+      }
+
+      .btn-back:hover {
+        border-color: rgba(255, 255, 255, 0.35);
+        color: white;
+        background: rgba(255, 255, 255, 0.02);
       }
     </style>
     <script>
-      function sendRequest(queryParams) {
-        // Perform a fetch request to the URL
+      let activeRequest = null;
+
+      function sendRequest(element, queryParams) {
+        // Visual indicator of active selection
+        document.querySelectorAll('.base-btn').forEach(btn => btn.classList.remove('selected'));
+        element.classList.add('selected');
+
+        // Cancel previous request if any
+        if (activeRequest) {
+          // just let it go
+        }
+
         fetch(queryParams)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Network response was not ok");
             }
-          })
-          .then((data) => {
-            console.log("Response:", data); // Handle the response data here
+            console.log("Success:", queryParams);
           })
           .catch((error) => {
             console.error("Fetch Error:", error);
@@ -63,24 +146,31 @@
     </script>
   </head>
   <body>
-    <h1>Pick a number base</h1>
-    <div id="button-container">
-      <button onclick="sendRequest('/?base=1')">2</button>
-      <button onclick="sendRequest('/?base=2')">3</button>
-      <button onclick="sendRequest('/?base=3')">4</button>
-      <button onclick="sendRequest('/?base=4')">5</button>
-      <button onclick="sendRequest('/?base=5')">6</button>
-      <button onclick="sendRequest('/?base=6')">7</button>
-      <button onclick="sendRequest('/?base=7')">8</button>
-      <button onclick="sendRequest('/?base=8')">9</button>
-      <button onclick="sendRequest('/?base=9')">10</button>
-      <button onclick="sendRequest('/?base=10')">11</button>
-      <button onclick="sendRequest('/?base=11')">12</button>
-      <button onclick="sendRequest('/?base=12')">13</button>
-      <button onclick="sendRequest('/?base=13')">14</button>
-      <button onclick="sendRequest('/?base=14')">15</button>
-      <button onclick="sendRequest('/?base=15')">16</button>
+    <div class="container">
+      <h1>Number Base</h1>
+      <p>Select a base to start the LED counter</p>
+
+      <div class="grid-container">
+        <button class="base-btn" onclick="sendRequest(this, '/?base=1')">2</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=2')">3</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=3')">4</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=4')">5</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=5')">6</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=6')">7</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=7')">8</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=8')">9</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=9')">10</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=10')">11</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=11')">12</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=12')">13</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=13')">14</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=14')">15</button>
+        <button class="base-btn" onclick="sendRequest(this, '/?base=15')">16</button>
+      </div>
+
+      <a href="/">
+        <button class="btn-back">Back to Menu</button>
+      </a>
     </div>
-    <a href="/" width="100%"><button>Back</button></a>
   </body>
 </html>

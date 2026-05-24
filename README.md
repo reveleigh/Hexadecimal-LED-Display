@@ -1,25 +1,48 @@
 # Hexadecimal LED Display
 
-A Raspberry Pi Pico W project that uses Micropython and Neopixels to highlight the place value of the hexadecimal numbering system.
+A Raspberry Pi Pico W / Pico 2 W project that uses MicroPython and NeoPixels to highlight the place value of the hexadecimal numbering system.
 
-Full project write can be found here: [https://russelleveleigh.medium.com/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b](https://medium.com/@russelleveleigh/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b?sk=2f96e7c51a4c88aef35aaff2d7647830)
+Full project write-up can be found here: [Exploring different number bases with a Hexadecimal Display](https://medium.com/@russelleveleigh/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b?sk=2f96e7c51a4c88aef35aaff2d7647830)
 
-Makes use of the following sources:
+---
 
-Neopixel library: https://github.com/blaz-r/pi_pico_neopixel
+## 🚀 Major Update: 24 May 2026
 
-Pico W Access Point: https://github.com/recantha/PicoWAccessPoint
+We have completely modernized the web server architecture and visual design system to run seamlessly and with rock-solid stability on the **Pico 2 W**:
 
-## Functionality Overview
+### 1. Transition to Microdot & asyncio
+* **The Problem:** The previous `tinyweb` server relied on older, low-level internal hacks in MicroPython's `uasyncio` library that are incompatible with modern firmware versions, resulting in `AttributeError` crashes and hangs. Additionally, the old `_thread` model caused concurrent memory allocation collisions on the Pico's dual-cores.
+* **The Solution:** We migrated the web server to the modern, actively-maintained **Microdot** framework and transitioned the entire multitasking system to cooperative, single-threaded **`asyncio`**.
+* **The Result:** All NeoPixel drawing and background tasks now yield cooperatively to the event loop, keeping the web server 100% active and responsive even during heavy animation loops. 
 
-The project offers the following key functionalities:
+### 2. Serialized Thread-Safe Architecture
+To completely eliminate visual overlapping and glitches, all NeoPixel hardware writes are now serialized through a single background task (`led_runner`). Web routes purely update global configuration variables, preventing concurrent write collisions.
 
-1. **Turn On**: Instantly illuminates all LEDs on the RGB matrix, creating a vibrant display.
+### 3. Debounced Color Pickers
+The color range sliders inside the web UI now feature a smart client-side debouncing layer. Visual indicators update instantly on the screen for a butter-smooth feel, but HTTP requests to the Pico are throttled to once per 120ms, protecting the microcontroller from network packet flooding.
 
-2. **Turn Off**: Swiftly turns off all LEDs, ensuring a clean and crisp matrix appearance.
+### 4. Dynamic 24-bit Hex Clock Backlight
+At boot, the Pico 2 W generates a completely random starting hexadecimal value and immediately begins counting up. As it counts, it automatically converts the 6 active place-value digits into a 24-bit RGB color (Red, Green, Blue nibbles) and projects it onto the 40-pixel back/bottom row (LEDs 96-135) in real-time, functioning as a beautiful, slowly morphing **Hexadecimal Color Clock**.
 
-3. **Display Hexadecimal Numbers**: The controller can exhibit hexadecimal numbers on the matrix, counting upwards from 0 to a predefined base value. The base value can be set to your preferred number (default is 15), allowing you to explore various number bases and patterns.
+### 5. High-End Glassmorphism Web UI
+All HTML control templates have been completely redesigned with a gorgeous frosted glass card style, elegant circular color swatches, styled range tracks, animated spinners, and touch-tactile CSS active states. The UI scales beautifully from mobile phones to desktops.
 
-4. **Cycle Through Spectrum**: This feature introduces a mesmerizing color spectrum effect. The matrix cycles through a captivating range of colors, producing a dynamic and visually appealing outcome.
+---
 
-5. **Rainbow Effect**: With this option, the matrix transforms into a vivid rainbow display. The LEDs dance through an array of colors, showcasing a delightful rainbow pattern.
+## 📚 Credits & Libraries Used
+
+This project makes use of the following excellent open-source libraries:
+
+* **Microdot Web Server (v2.x):** [https://github.com/miguelgrinberg/microdot](https://github.com/miguelgrinberg/microdot) — Minimalistic, async-native web framework for MicroPython.
+* **Neopixel Library:** [https://github.com/blaz-r/pi_pico_neopixel](https://github.com/blaz-r/pi_pico_neopixel) — High-performance WS2812 PIO state-machine driver.
+* **Pico W Access Point:** [https://github.com/recantha/PicoWAccessPoint](https://github.com/recantha/PicoWAccessPoint) — Reference implementation for Wi-Fi Access Point configuration.
+
+---
+
+## 🛠️ Functionality Overview
+
+1. **Turn On:** Instantly illuminates all place-value LEDs to pure white.
+2. **Turn Off:** Swiftly turns off all LEDs.
+3. **Display Hexadecimal Numbers:** Symmetrical grid to choose bases 2 through 16. It counts upwards representing positional base places with red indicator backdrops and white active digit highlights.
+4. **Cycle Through Spectrum:** Cycles through the RGB spectrum, showing the numeric breakdown of colors on the places in real-time.
+5. **Rainbow Effect:** Displays a beautiful, rolling color-wheel spectrum loop.

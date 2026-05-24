@@ -1,51 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Hexadecimal Display</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hexadecimal Display Controller</title>
     <style>
+      :root {
+        --bg-color: #0d0f12;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --text-color: #f3f4f6;
+        --text-muted: #9ca3af;
+        --primary-color: #ff4b4b;
+        --primary-gradient: linear-gradient(135deg, #ff4b4b, #ff7b7b);
+        --accent-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+      }
+
       body {
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        padding: 50px;
-        font-family: verdana;
-        color: #231f20;
-        background-color: #efe6dd;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        box-sizing: border-box;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 440px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        padding: 30px 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+        text-align: center;
       }
 
       h1 {
-        margin-bottom: 50px;
-        font-size: 4rem;
+        margin: 0 0 8px 0;
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
+      }
+
+      p {
+        margin: 0 0 32px 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .button-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
       }
 
       a {
-        margin-bottom: 50px;
-        width: 100%;
         text-decoration: none;
+        width: 100%;
       }
 
-      button {
-        font-size: 4rem;
-        font-family: verdana;
+      .btn {
         width: 100%;
-        height: 150px;
-        background-color: #bb4430;
+        padding: 18px;
+        font-size: 1.1rem;
+        font-weight: 600;
         color: white;
-        border: none;
-        border-radius: 15px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
         cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-primary {
+        background: var(--primary-gradient);
+        border: none;
+        box-shadow: 0 8px 20px rgba(255, 75, 75, 0.2);
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #ff5b5b, #ff8b8b);
+        box-shadow: 0 12px 24px rgba(255, 75, 75, 0.35);
+      }
+
+      .btn-accent {
+        background: var(--accent-gradient);
+        border: none;
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+      }
+
+      .btn-accent:hover {
+        background: linear-gradient(135deg, #4b92f6, #70b5fa);
+        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.35);
+      }
+
+      .btn-off {
+        background: transparent;
+        border: 1.5px solid rgba(255, 255, 255, 0.25);
+        color: var(--text-muted);
+      }
+
+      .btn-off:hover {
+        border-color: #ff4b4b;
+        color: white;
+        background: rgba(255, 75, 75, 0.05);
+      }
+
+      .footer {
+        margin-top: 24px;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.2);
       }
     </style>
   </head>
   <body>
-    <h1>Hexadecimal Display</h1>
+    <div class="container">
+      <h1>LED Matrix</h1>
+      <p>Hexadecimal Display Controller</p>
 
-    <a href="/on"><button>On</button></a>
-    <a href="/off"><button>Off</button></a>
-    <a href="/hex"><button>Count</button></a>
-    <a href="/set-color"><button>Colour Picker</button></a>
-    <a href="/spectrum"><button>Colour Spectrum</button></a>
-    <a href="/rainbow"><button>Rainbow</button></a>
+      <div class="button-list">
+        <a href="/on"><button class="btn btn-primary">Turn On</button></a>
+        <a href="/hex"><button class="btn">Count in Base</button></a>
+        <a href="/set-color"><button class="btn">Colour Picker</button></a>
+        <a href="/spectrum"><button class="btn btn-accent">Colour Spectrum</button></a>
+        <a href="/rainbow"><button class="btn btn-accent">Rainbow Loop</button></a>
+        <a href="/off"><button class="btn btn-off">Turn Off</button></a>
+      </div>
+      
+      <div class="footer">Pico 2 W Controller</div>
+    </div>
   </body>
 </html>

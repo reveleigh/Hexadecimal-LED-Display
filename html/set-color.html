@@ -1,278 +1,328 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Hexadecimal Display</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Colour Picker</title>
     <style>
+      :root {
+        --bg-color: #0d0f12;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --text-color: #f3f4f6;
+        --text-muted: #9ca3af;
+      }
+
       body {
         margin: 0;
-        padding: 0;
-        font-family: verdana;
-        color: #231f20;
-        background-color: #efe6dd;
-        font-size: 3rem;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        box-sizing: border-box;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 440px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        padding: 30px 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+        text-align: center;
       }
 
       h1 {
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        font-size: 4rem;
+        margin: 0 0 8px 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
       }
 
-      #button-container {
-        display: flex;
-        flex-wrap: wrap;
-        width: 90%;
-        justify-content: center;
-        margin: 20px auto;
+      p {
+        margin: 0 0 24px 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
       }
 
-      button {
-        display: inline-block;
-        width: 22%;
-        height: 140px;
-        margin: 1%;
-        padding: 1%;
-        font-size: 1.2em;
-        text-align: center;
-        border: none;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      .grid-presets {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 30px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
       }
 
-      #red-button {
-        background-color: rgb(255, 0, 0);
-      }
-
-      #orange-button {
-        background-color: rgb(255, 165, 0);
-      }
-
-      #yellow-button {
-        background-color: rgb(255, 255, 0);
-      }
-
-      #green-yellow-button {
-        background-color: rgb(173, 255, 47);
-      }
-
-      #green-button {
-        background-color: rgb(0, 128, 0);
-      }
-
-      #green-cyan-button {
-        background-color: rgb(0, 255, 255);
-      }
-
-      #cyan-button {
-        background-color: rgb(0, 191, 255);
-      }
-
-      #blue-cyan-button {
-        background-color: rgb(0, 139, 139);
-      }
-
-      #blue-button {
-        background-color: rgb(0, 0, 255);
-      }
-
-      #blue-magenta-button {
-        background-color: rgb(139, 0, 139);
-      }
-
-      #magenta-button {
-        background-color: rgb(255, 0, 255);
-      }
-
-      #red-magenta-button {
-        background-color: rgb(255, 20, 147);
-      }
-
-      #white-button {
-        background-color: rgb(255, 255, 255);
-      }
-
-      #warm-white-button {
-        background-color: rgb(245, 222, 179);
-      }
-
-      #cool-white-button {
-        background-color: rgb(173, 216, 230);
-      }
-
-      #off-button {
-        background-color: rgb(0, 0, 0);
-        color: white;
-      }
-
-      #back {
+      .preset-btn {
         width: 100%;
-        height: 150px;
-        margin: 20px auto;
-        font-size: 4rem;
-        background-color: #bb4430;
-        color: white;
-        border: none;
-        border-radius: 15px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.15);
         cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
       }
 
-      #back-container {
-        width: 90%;
-        margin: 20px auto;
-        justify-content: center;
+      .preset-btn:hover {
+        transform: scale(1.15);
+        border-color: white;
+        box-shadow: 0 6px 15px rgba(255, 255, 255, 0.25);
       }
 
-      .color-slider-container {
+      .preset-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Preset specific colors */
+      #red-btn { background-color: rgb(255, 0, 0); }
+      #orange-btn { background-color: rgb(255, 120, 0); }
+      #yellow-btn { background-color: rgb(255, 220, 0); }
+      #green-yellow-btn { background-color: rgb(173, 255, 47); }
+      #green-btn { background-color: rgb(0, 255, 0); }
+      #green-cyan-btn { background-color: rgb(0, 255, 255); }
+      #cyan-btn { background-color: rgb(0, 191, 255); }
+      #blue-cyan-btn { background-color: rgb(0, 100, 200); }
+      #blue-btn { background-color: rgb(0, 0, 255); }
+      #blue-magenta-btn { background-color: rgb(139, 0, 255); }
+      #magenta-btn { background-color: rgb(255, 0, 255); }
+      #red-magenta-btn { background-color: rgb(255, 20, 147); }
+      #white-btn { background-color: rgb(255, 255, 255); }
+      #warm-white-btn { background-color: rgb(255, 230, 200); }
+      #cool-white-btn { background-color: rgb(200, 230, 255); }
+      #off-btn {
+        background-color: #1a1e24;
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+      }
+
+      .sliders-container {
         display: flex;
-        flex-wrap: wrap;
-        width: 90%;
-        justify-content: center;
-        margin: 40px auto;
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 30px;
+        text-align: left;
+      }
+
+      .slider-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .slider-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      .slider-value {
+        font-family: monospace;
+        font-size: 1rem;
+        color: var(--text-color);
+        background: rgba(255, 255, 255, 0.05);
+        padding: 2px 8px;
+        border-radius: 6px;
       }
 
       .color-slider {
+        -webkit-appearance: none;
+        appearance: none;
         width: 100%;
+        height: 8px;
+        border-radius: 4px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.1);
+        transition: background 0.3s;
+      }
+
+      /* Custom slider track colors for high-tech look */
+      #red-slider { background: linear-gradient(to right, #200, #f00); }
+      #green-slider { background: linear-gradient(to right, #020, #0f0); }
+      #blue-slider { background: linear-gradient(to right, #002, #00f); }
+
+      .color-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
         height: 20px;
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        transition: transform 0.1s ease;
+      }
+
+      .color-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+
+      a {
+        text-decoration: none;
+        width: 100%;
+      }
+
+      .btn-back {
+        width: 100%;
+        padding: 16px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: transparent;
+        border: 1.5px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+      }
+
+      .btn-back:hover {
+        border-color: rgba(255, 255, 255, 0.35);
+        color: white;
+        background: rgba(255, 255, 255, 0.02);
       }
     </style>
     <script>
       function sendRequest(queryParams) {
-        // Perform a fetch request to the URL
         fetch(queryParams)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Network response was not ok");
             }
           })
-          .then((data) => {
-            console.log("Response:", data); // Handle the response data here
-          })
           .catch((error) => {
             console.error("Fetch Error:", error);
           });
       }
 
-      // Function to update the span values
       function updateSpanValues() {
         const redValue = document.getElementById("red-slider").value;
         const greenValue = document.getElementById("green-slider").value;
         const blueValue = document.getElementById("blue-slider").value;
 
-        document.getElementById("rVal").textContent = `${redValue}`;
-        document.getElementById("gVal").textContent = `${greenValue}`;
-        document.getElementById("bVal").textContent = `${blueValue}`;
+        document.getElementById("rVal").textContent = redValue;
+        document.getElementById("gVal").textContent = greenValue;
+        document.getElementById("bVal").textContent = blueValue;
+      }
+
+      let debounceTimeout = null;
+
+      function handleSliderChange() {
+        const r = document.getElementById("red-slider").value;
+        const g = document.getElementById("green-slider").value;
+        const b = document.getElementById("blue-slider").value;
+        
+        updateSpanValues();
+
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+          sendRequest('?r=' + r + '&g=' + g + '&b=' + b);
+        }, 120); // Debounce network requests by 120ms to prevent flooding the Pico 2 W
+      }
+
+      function handlePresetClick(r, g, b) {
+        document.getElementById("red-slider").value = r;
+        document.getElementById("green-slider").value = g;
+        document.getElementById("blue-slider").value = b;
+        
+        sendRequest('?r=' + r + '&g=' + g + '&b=' + b);
+        updateSpanValues();
       }
     </script>
   </head>
   <body>
-    <h1>Show Colour Values</h1>
-    <div id="button-container">
-      <button id="red-button" onclick="sendRequest('?r=255&g=0&b=0')"></button>
-      <button
-        id="orange-button"
-        onclick="sendRequest('?r=255&g=165&b=0')"
-      ></button>
-      <button
-        id="yellow-button"
-        onclick="sendRequest('?r=255&g=255&b=0')"
-      ></button>
-      <button
-        id="green-yellow-button"
-        onclick="sendRequest('?r=173&g=255&b=47')"
-      ></button>
-      <button
-        id="green-button"
-        onclick="sendRequest('?r=0&g=255&b=0')"
-      ></button>
-      <button
-        id="green-cyan-button"
-        onclick="sendRequest('?r=0&g=255&b=255')"
-      ></button>
-      <button
-        id="cyan-button"
-        onclick="sendRequest('?r=0&g=191&b=255')"
-      ></button>
-      <button
-        id="blue-cyan-button"
-        onclick="sendRequest('?r=0&g=139&b=139')"
-      ></button>
-      <button id="blue-button" onclick="sendRequest('?r=0&g=0&b=255')"></button>
-      <button
-        id="blue-magenta-button"
-        onclick="sendRequest('?r=139&g=0&b=139')"
-      ></button>
-      <button
-        id="magenta-button"
-        onclick="sendRequest('?r=255&g=0&b=255')"
-      ></button>
-      <button
-        id="red-magenta-button"
-        onclick="sendRequest('?r=255&g=20&b=147')"
-      ></button>
-      <button
-        id="white-button"
-        onclick="sendRequest('?r=255&g=255&b=255')"
-      ></button>
-      <button
-        id="warm-white-button"
-        onclick="sendRequest('?r=245&g=122&b=179')"
-      ></button>
-      <button
-        id="cool-white-button"
-        onclick="sendRequest('?r=173&g=216&b=230')"
-      ></button>
-      <button id="off-button" onclick="sendRequest('?r=0&g=0&b=0')"></button>
-    </div>
-    <div id="slider-container">
-      <!-- Red Slider -->
-      <div class="color-slider-container">
-        Red: <span id="rVal">0</span>
-        <input
-          type="range"
-          class="color-slider"
-          id="red-slider"
-          name="red-slider"
-          min="0"
-          max="255"
-          value="0"
-          onchange="sendRequest('?r=' + this.value + '&g=' + document.getElementById('green-slider').value + '&b=' + document.getElementById('blue-slider').value); updateSpanValues();"
-        />
+    <div class="container">
+      <h1>Colour Picker</h1>
+      <p>Tap a preset or slide to mix custom RGB values</p>
+
+      <!-- Presets Grid -->
+      <div class="grid-presets">
+        <button id="red-btn" class="preset-btn" onclick="handlePresetClick(255, 0, 0)"></button>
+        <button id="orange-btn" class="preset-btn" onclick="handlePresetClick(255, 120, 0)"></button>
+        <button id="yellow-btn" class="preset-btn" onclick="handlePresetClick(255, 220, 0)"></button>
+        <button id="green-yellow-btn" class="preset-btn" onclick="handlePresetClick(173, 255, 47)"></button>
+        <button id="green-btn" class="preset-btn" onclick="handlePresetClick(0, 255, 0)"></button>
+        <button id="green-cyan-btn" class="preset-btn" onclick="handlePresetClick(0, 255, 255)"></button>
+        <button id="cyan-btn" class="preset-btn" onclick="handlePresetClick(0, 191, 255)"></button>
+        <button id="blue-cyan-btn" class="preset-btn" onclick="handlePresetClick(0, 100, 200)"></button>
+        <button id="blue-btn" class="preset-btn" onclick="handlePresetClick(0, 0, 255)"></button>
+        <button id="blue-magenta-btn" class="preset-btn" onclick="handlePresetClick(139, 0, 255)"></button>
+        <button id="magenta-btn" class="preset-btn" onclick="handlePresetClick(255, 0, 255)"></button>
+        <button id="red-magenta-btn" class="preset-btn" onclick="handlePresetClick(255, 20, 147)"></button>
+        <button id="white-btn" class="preset-btn" onclick="handlePresetClick(255, 255, 255)"></button>
+        <button id="warm-white-btn" class="preset-btn" onclick="handlePresetClick(255, 230, 200)"></button>
+        <button id="cool-white-btn" class="preset-btn" onclick="handlePresetClick(200, 230, 255)"></button>
+        <button id="off-btn" class="preset-btn" onclick="handlePresetClick(0, 0, 0)"></button>
       </div>
 
-      <!-- Green Slider -->
-      <div class="color-slider-container">
-        Green: <span id="gVal">0</span>
-        <input
-          type="range"
-          class="color-slider"
-          id="green-slider"
-          name="green-slider"
-          min="0"
-          max="255"
-          value="0"
-          onchange="sendRequest('?r=' + document.getElementById('red-slider').value + '&g=' + this.value + '&b=' + document.getElementById('blue-slider').value); updateSpanValues();"
-        />
+      <!-- Sliders List -->
+      <div class="sliders-container">
+        <!-- Red Slider -->
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Red</span>
+            <span id="rVal" class="slider-value">0</span>
+          </div>
+          <input
+            type="range"
+            class="color-slider"
+            id="red-slider"
+            min="0"
+            max="255"
+            value="0"
+            oninput="handleSliderChange()"
+          />
+        </div>
+
+        <!-- Green Slider -->
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Green</span>
+            <span id="gVal" class="slider-value">0</span>
+          </div>
+          <input
+            type="range"
+            class="color-slider"
+            id="green-slider"
+            min="0"
+            max="255"
+            value="0"
+            oninput="handleSliderChange()"
+          />
+        </div>
+
+        <!-- Blue Slider -->
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>Blue</span>
+            <span id="bVal" class="slider-value">0</span>
+          </div>
+          <input
+            type="range"
+            class="color-slider"
+            id="blue-slider"
+            min="0"
+            max="255"
+            value="0"
+            oninput="handleSliderChange()"
+          />
+        </div>
       </div>
 
-      <!-- Blue Slider -->
-      <div class="color-slider-container">
-        Blue: <span id="bVal">0</span>
-        <input
-          type="range"
-          class="color-slider"
-          id="blue-slider"
-          name="blue-slider"
-          min="0"
-          max="255"
-          value="0"
-          onchange="sendRequest('?r=' + document.getElementById('red-slider').value + '&g=' + document.getElementById('green-slider').value + '&b=' + this.value); updateSpanValues();"
-        />
-      </div>
-    </div>
-    <div id="back-container">
       <a href="/">
-        <button id="back">Back</button>
+        <button class="btn-back">Back to Menu</button>
       </a>
     </div>
+  </body>
 </html>

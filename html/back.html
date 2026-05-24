@@ -1,42 +1,118 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Hexadecimal Display</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Display Running</title>
     <style>
+      :root {
+        --bg-color: #0d0f12;
+        --card-bg: rgba(255, 255, 255, 0.03);
+        --card-border: rgba(255, 255, 255, 0.08);
+        --text-color: #f3f4f6;
+        --text-muted: #9ca3af;
+        --primary-gradient: linear-gradient(135deg, #ff4b4b, #ff7b7b);
+      }
+
       body {
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        padding: 50px;
-        font-family: verdana;
-        color: #231f20;
-        background-color: #efe6dd;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        box-sizing: border-box;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 440px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 24px;
+        padding: 40px 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      .spinner {
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(255, 255, 255, 0.1);
+        border-top-color: #ff4b4b;
+        border-radius: 50%;
+        margin: 0 auto 30px auto;
+        animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      h1 {
+        margin: 0 0 12px 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      p {
+        margin: 0 0 32px 0;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
       }
 
       a {
-        margin-bottom: 50px;
-        width: 100%;
         text-decoration: none;
-        color: inherit;
+        width: 100%;
       }
 
-      button {
-        font-size: 4rem;
-        font-family: verdana;
+      .btn {
         width: 100%;
-        height: 150px;
-        background-color: #bb4430;
+        padding: 16px;
+        font-size: 1.1rem;
+        font-weight: 600;
         color: white;
+        background: var(--primary-gradient);
         border: none;
-        border-radius: 15px;
+        border-radius: 16px;
         cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-sizing: border-box;
+        box-shadow: 0 8px 20px rgba(255, 75, 75, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn:hover {
+        background: linear-gradient(135deg, #ff5b5b, #ff8b8b);
+        box-shadow: 0 12px 24px rgba(255, 75, 75, 0.35);
+        transform: translateY(-2px);
+      }
+
+      .btn:active {
+        transform: translateY(0);
       }
     </style>
   </head>
   <body>
-    <a href="/">
-      <button>Back</button>
-    </a>
+    <div class="container">
+      <div class="spinner"></div>
+      <h1>Display Active</h1>
+      <p>The selected sequence is currently running on the LED matrix.</p>
+
+      <a href="/">
+        <button class="btn">Back to Menu</button>
+      </a>
+    </div>
   </body>
 </html>
