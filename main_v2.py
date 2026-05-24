@@ -17,6 +17,7 @@ except ImportError:
 
 # Boot with the hexadecimal counter mode (OPTION = 3) active
 OPTION = 3
+IS_BOOT_COUNT = True
 
 # Define SSID and password for the access point
 SSID = "Hexadecimal Clock"
@@ -117,7 +118,9 @@ def increment_place(index, base):
 
 # Non-blocking hexadecimal display runner
 async def displayHex_async():
-    global OPTION, BASE, place
+    global OPTION, BASE, place, IS_BOOT_COUNT
+    current_colors = [(0, 0, 0)] * 136
+    
     while OPTION == 3:
         # Calculate the RGB color equivalent to the current 6-digit place count
         # Red is place[0] & place[1]; Green is place[2] & place[3]; Blue is place[4] & place[5]
@@ -127,22 +130,46 @@ async def displayHex_async():
 
         reverse_place = place[::-1]
         
-        # Set digits background (Rows 0-5: LEDs 0-95) to Red
+        # Create target color buffer
+        target_colors = [(0, 0, 0)] * 136
         for i in range(96):
-            STRIP.set_pixel(i, RED)
+            target_colors[i] = RED
             
         # Represent the current 24-bit Hexadecimal count color on the back/bottom (LEDs 96-135)
         for i in range(96, 136):
-            STRIP.set_pixel(i, (r, g, b))
+            target_colors[i] = (r, g, b)
 
         for i in range(6):
             for x in range(BASE + 1, 16):
-                STRIP.set_pixel(led_matrix[i][x], OFF)
+                target_colors[led_matrix[i][x]] = OFF
 
         for i, p in enumerate(reverse_place):
-            STRIP.set_pixel(led_matrix[i][p], WHITE)
+            target_colors[led_matrix[i][p]] = WHITE
 
-        STRIP.show()
+        # Apply transition
+        if IS_BOOT_COUNT:
+            # Smoothly fade from current colors to target colors over 6 steps (60ms total, extremely quick & smooth)
+            steps = 6
+            for step in range(1, steps + 1):
+                if OPTION != 3:
+                    break
+                ratio = step / steps
+                for idx in range(136):
+                    c1 = current_colors[idx]
+                    c2 = target_colors[idx]
+                    curr_r = int(c1[0] + (c2[0] - c1[0]) * ratio)
+                    curr_g = int(c1[1] + (c2[1] - c1[1]) * ratio)
+                    curr_b = int(c1[2] + (c2[2] - c1[2]) * ratio)
+                    STRIP.set_pixel(idx, (curr_r, curr_g, curr_b))
+                STRIP.show()
+                await asyncio.sleep(0.01)
+        else:
+            # Instant transition
+            for idx in range(136):
+                STRIP.set_pixel(idx, target_colors[idx])
+            STRIP.show()
+            
+        current_colors = list(target_colors)
 
         # Non-blocking wait for 0.9 seconds (9 steps of 0.1s to check for option changes)
         for _ in range(9):
@@ -217,9 +244,10 @@ app = Microdot()
 
 @app.route('/')
 async def index(request):
-    global BASE, OPTION, place
+    global BASE, OPTION, place, IS_BOOT_COUNT
     # Clear active option and turn off display when navigating back to menu
     OPTION = 2
+    IS_BOOT_COUNT = False
     
     base_val = request.args.get('base')
     if base_val:
@@ -231,7 +259,8 @@ async def index(request):
 
 @app.route('/set-color')
 async def set_color(request):
-    global OPTION, TARGET_COLOR
+    global OPTION, TARGET_COLOR, IS_BOOT_COUNT
+    IS_BOOT_COUNT = False
     
     r_val = request.args.get('r')
     g_val = request.args.get('g')
@@ -245,30 +274,36 @@ async def set_color(request):
 
 @app.route('/on')
 async def on(request):
-    global OPTION
+    global OPTION, IS_BOOT_COUNT
     OPTION = 1
+    IS_BOOT_COUNT = False
     return send_file('html/back.html')
 
 @app.route('/off')
 async def off(request):
-    global OPTION
+    global OPTION, IS_BOOT_COUNT
     OPTION = 2
+    IS_BOOT_COUNT = False
     return send_file('html/back.html')
 
 @app.route('/hex')
 async def hex(request):
+    global IS_BOOT_COUNT
+    IS_BOOT_COUNT = False
     return send_file('html/hex.html')
 
 @app.route('/spectrum')
 async def spectrum(request):
-    global OPTION
+    global OPTION, IS_BOOT_COUNT
     OPTION = 4
+    IS_BOOT_COUNT = False
     return send_file('html/back.html')
 
 @app.route('/rainbow')
 async def rainbow(request):
-    global OPTION
+    global OPTION, IS_BOOT_COUNT
     OPTION = 5
+    IS_BOOT_COUNT = False
     return send_file('html/back.html')
 
 # Core LED state runner task
