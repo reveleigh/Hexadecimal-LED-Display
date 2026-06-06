@@ -1,121 +1,48 @@
 # Hexadecimal LED Display
 
-A Raspberry Pi Pico 2 W-powered hexadecimal LED matrix display.
+A Raspberry Pi Pico W / Pico 2 W project that uses MicroPython and NeoPixels to highlight the place value of the hexadecimal numbering system.
 
-## Hardware
+Full project write-up can be found here: [Exploring different number bases with a Hexadecimal Display](https://medium.com/@russelleveleigh/exploring-different-number-bases-with-a-hexadecimal-display-d1d2c726263b?sk=2f96e7c51a4c88aef35aaff2d7647830)
 
-- Raspberry Pi Pico 2 W
-- 256-LED matrix (16x16) using WS2812B NeoPixel strips
-- Custom PCB with level-shifting and power regulation
+---
 
-## Setup
+## 🚀 Major Update: 24 May 2026
 
-### Firmware
+We have completely modernized the web server architecture and visual design system to run seamlessly and with rock-solid stability on the **Pico 2 W**:
 
-I flashed the firmware using the Raspberry Pi Imager. I selected the "Raspberry Pi OS (other)" option and chose "Raspberry Pi OS Lite (64-bit)".
+### 1. Transition to Microdot & asyncio
+* **The Problem:** The previous `tinyweb` server relied on older, low-level internal hacks in MicroPython's `uasyncio` library that are incompatible with modern firmware versions, resulting in `AttributeError` crashes and hangs. Additionally, the old `_thread` model caused concurrent memory allocation collisions on the Pico's dual-cores.
+* **The Solution:** We migrated the web server to the modern, actively-maintained **Microdot** framework and transitioned the entire multitasking system to cooperative, single-threaded **`asyncio`**.
+* **The Result:** All NeoPixel drawing and background tasks now yield cooperatively to the event loop, keeping the web server 100% active and responsive even during heavy animation loops. 
 
-### Initial Setup
+### 2. Serialized Thread-Safe Architecture
+To completely eliminate visual overlapping and glitches, all NeoPixel hardware writes are now serialized through a single background task (`led_runner`). Web routes purely update global configuration variables, preventing concurrent write collisions.
 
-I opened the boot folder on the Pico and created an empty file called `ssh` to enable SSH access.
+### 3. Debounced Colour Pickers
+The color range sliders inside the web UI now feature a smart client-side debouncing layer. Visual indicators update instantly on the screen for a butter-smooth feel, but HTTP requests to the Pico are throttled to once per 120ms, protecting the microcontroller from network packet flooding.
 
-I created a file called `wpa_supplicant.conf` in the boot folder with my Wi-Fi details:
+### 4. Dynamic 24-bit Hex Clock Backlight
+At boot, the Pico 2 W generates a completely random starting hexadecimal value and immediately begins counting up. As it counts, it automatically converts the 6 active place-value digits into a 24-bit RGB color (Red, Green, Blue nibbles) and projects it onto the 40-pixel back/bottom row (LEDs 96-135) in real-time, functioning as a beautiful, slowly morphing **Hexadecimal Colour Clock**.
 
-```
-country=GB
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
+### 5. High-End Glassmorphism Web UI
+All HTML control templates have been completely redesigned with a gorgeous frosted glass card style, elegant circular color swatches, styled range tracks, animated spinners, and touch-tactile CSS active states. The UI scales beautifully from mobile phones to desktops.
 
-network={
-    ssid="MyWiFiSSID"
-    psk="MyWiFiPassword"
-}
-```
+---
 
-I then navigated to my router to find the IP address assigned to the Pico.
+## 📚 Credits & Libraries Used
 
-### Connecting
+This project makes use of the following excellent open-source libraries:
 
-I connected to the Pico using SSH:
+* **Microdot Web Server (v2.x):** [https://github.com/miguelgrinberg/microdot](https://github.com/miguelgrinberg/microdot) — Minimalistic, async-native web framework for MicroPython.
+* **Neopixel Library:** [https://github.com/blaz-r/pi_pico_neopixel](https://github.com/blaz-r/pi_pico_neopixel) — High-performance WS2812 PIO state-machine driver.
+* **Pico W Access Point:** [https://github.com/recantha/PicoWAccessPoint](https://github.com/recantha/PicoWAccessPoint) — Reference implementation for Wi-Fi Access Point configuration.
 
-```
-ssh pi@<IP_ADDRESS>
-```
+---
 
-The default password was `raspberry`.
+## 🛠️ Functionality Overview
 
-### Initial Configuration
-
-I ran `sudo raspi-config` to:
-
-1. Change the default password
-2. Enable SSH
-3. Set the hostname to `hex-led-display`
-4. Set the locale to `en_GB.UTF-8`
-
-I also enabled the SPI interface to communicate with the LED matrix.
-
-I ran the following commands to update the system:
-
-```
-sudo apt update
-sudo apt full-upgrade
-```
-
-### Python Libraries
-
-I installed the required Python libraries:
-
-```
-sudo apt install python3-pip
-pip3 install rpi_ws281x adafruit-pureio spidev
-```
-
-## Running the Code
-
-I copied the `led_matrix.py` and `main_v2.py` files to the Pico.
-
-To run the code:
-
-```
-python3 main_v2.py
-```
-
-To run the code in the background and keep it running after I close the SSH connection, I used:
-
-```
-nohup python3 main_v2.py &
-```
-
-## Customisation
-
-### Changing Characters
-
-I modified the `led_matrix.py` file to define the hexadecimal characters (0-9, A-F). Each character is represented as a grid of 8x8 pixels.
-
-### Adjusting Brightness
-
-I adjusted the brightness in the `main_v2.py` file by changing the `brightness` parameter when creating the `Adafruit_NeoPixel` object.
-
-### Updating Colours
-
-I modified the `hex_colours` dictionary in `led_matrix.py` to change the colour scheme.
-
-## Troubleshooting
-
-### LEDs Not Lighting Up
-
-I checked the wiring connections and made sure the data pin was connected to the correct GPIO pin.
-
-I also verified that the ground connection was shared between the Pico and the LED strip.
-
-### Flickering
-
-If the LEDs flicker, I checked:
-
-- Power supply: I made sure the power supply could provide enough current (5V 10A recommended)
-- Level-shifting: I used a level-shifter to convert the 3.3V signal from the Pico to 5V for the LEDs
-- Wiring: I checked for loose connections on the data line
-
-## Credits
-
-Based on the rpi_ws281x library by Jeremy Garff.
+1. **Turn On:** Instantly illuminates all place-value LEDs to pure white.
+2. **Turn Off:** Swiftly turns off all LEDs.
+3. **Display Hexadecimal Numbers:** Symmetrical grid to choose bases 2 through 16. It counts upwards representing positional base places with red indicator backdrops and white active digit highlights.
+4. **Cycle Through Spectrum:** Cycles through the RGB spectrum, showing the numeric breakdown of colours on the places in real-time.
+5. **Rainbow Effect:** Displays a beautiful, rolling color-wheel spectrum loop.
