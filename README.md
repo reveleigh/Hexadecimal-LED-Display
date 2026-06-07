@@ -29,6 +29,26 @@ All HTML control templates have been completely redesigned with a gorgeous frost
 
 ---
 
+## File Versions
+
+This repository contains different versions of the main controller file, reflecting the project's evolution:
+
+* **[main.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main.py):** The original implementation using the older, now-deprecated `tinyweb` server and a multithreaded design.
+* **[main_v2.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main_v2.py):** The initial migration to the modern `microdot` server and a cooperative single-threaded `asyncio` loop to prevent concurrent memory collisions.
+* **[main_v3.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main_v3.py):** The current stable and recommended version, which resolves critical signal glitching by adding interrupt shielding and proactive garbage collection.
+
+---
+
+## What I Learnt: Debugging the Signal Glitches (v2 vs v3)
+
+While testing `main_v2.py`, the display began to periodically glitch, blink, and display blocks of wrong colours—even when the web server was sitting completely idle. To diagnose this, I created a standalone, synchronous script ([hardware_test.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/hardware_test.py)) that isolated the visual animations from the network stack.
+
+Because the standalone script ran flawlessly, I discovered that the glitching was a software-driven timing issue rather than a hardware fault:
+* **The Root Cause:** The `pi_pico_neopixel` library is written in pure Python. It streams data to the RP2040/RP2350 PIO TX FIFO buffer in a standard loop. Because the hardware FIFO is only 4 words deep, it drains in just 120 microseconds at the NeoPixel data rate (800 kHz). In the full server build, background Wi-Fi AP broadcasts (every 102ms) and automatic garbage collection pauses constantly preempted the CPU. If the CPU was blocked for more than 120 microseconds, the FIFO starved, the line dropped low, and the NeoPixels interpreted it as an accidental reset/latch command mid-frame.
+* **The Solution:** In `main_v3.py`, I monkey-patched `Neopixel.show` to disable interrupts (`machine.disable_irq()`) during data transmission (~4.08ms per frame) and re-enable them immediately afterward. I also added proactive garbage collection (`gc.collect()`) on boot and during visual transitions to clean the heap during idle moments. This completely eliminated the glitches with zero impact on Wi-Fi connection stability.
+
+---
+
 ## Credits & Libraries Used
 
 This project makes use of the following excellent open-source libraries:
