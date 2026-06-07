@@ -18,11 +18,11 @@ We have completely modernized the web server architecture and visual design syst
 ### 2. Serialized Thread-Safe Architecture
 To completely eliminate visual overlapping and glitches, all NeoPixel hardware writes are now serialized through a single background task (`led_runner`). Web routes purely update global configuration variables, preventing concurrent write collisions.
 
-### 3. Debounced Color Pickers
+### 3. Debounced Colour Pickers
 The color range sliders inside the web UI now feature a smart client-side debouncing layer. Visual indicators update instantly on the screen for a butter-smooth feel, but HTTP requests to the Pico are throttled to once per 120ms, protecting the microcontroller from network packet flooding.
 
 ### 4. Dynamic 24-bit Hex Clock Backlight
-At boot, the Pico 2 W generates a completely random starting hexadecimal value and immediately begins counting up. As it counts, it automatically converts the 6 active place-value digits into a 24-bit RGB color (Red, Green, Blue nibbles) and projects it onto the 40-pixel back/bottom row (LEDs 96-135) in real-time, functioning as a beautiful, slowly morphing **Hexadecimal Color Clock**.
+At boot, the Pico 2 W generates a completely random starting hexadecimal value and immediately begins counting up. As it counts, it automatically converts the 6 active place-value digits into a 24-bit RGB color (Red, Green, Blue nibbles) and projects it onto the 40-pixel back/bottom row (LEDs 96-135) in real-time, functioning as a beautiful, slowly morphing **Hexadecimal Colour Clock**.
 
 ### 5. High-End Glassmorphism Web UI
 All HTML control templates have been completely redesigned with a gorgeous frosted glass card style, elegant circular color swatches, styled range tracks, animated spinners, and touch-tactile CSS active states. The UI scales beautifully from mobile phones to desktops.
@@ -44,5 +44,5 @@ This project makes use of the following excellent open-source libraries:
 1. **Turn On:** Instantly illuminates all place-value LEDs to pure white.
 2. **Turn Off:** Swiftly turns off all LEDs.
 3. **Display Hexadecimal Numbers:** Symmetrical grid to choose bases 2 through 16. It counts upwards representing positional base places with red indicator backdrops and white active digit highlights.
-4. **Cycle Through Spectrum:** Cycles through the RGB spectrum, showing the numeric breakdown of colors on the places in real-time.
+4. **Cycle Through Spectrum:** Cycles through the RGB spectrum, showing the numeric breakdown of colours on the places in real-time.
 5. **Rainbow Effect:** Displays a beautiful, rolling color-wheel spectrum loop.
