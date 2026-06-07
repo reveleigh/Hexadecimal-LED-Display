@@ -6,13 +6,13 @@ Full project write-up can be found here: [Exploring different number bases with 
 
 ---
 
-## 🚀 Major Update: 24 May 2026
+## Major Update: 24 May 2026
 
-We have completely modernized the web server architecture and visual design system to run seamlessly and with rock-solid stability on the **Pico 2 W**:
+I have completely modernized the web server architecture and visual design system to run seamlessly and with rock-solid stability on the **Pico 2 W**:
 
 ### 1. Transition to Microdot & asyncio
 * **The Problem:** The previous `tinyweb` server relied on older, low-level internal hacks in MicroPython's `uasyncio` library that are incompatible with modern firmware versions, resulting in `AttributeError` crashes and hangs. Additionally, the old `_thread` model caused concurrent memory allocation collisions on the Pico's dual-cores.
-* **The Solution:** We migrated the web server to the modern, actively-maintained **Microdot** framework and transitioned the entire multitasking system to cooperative, single-threaded **`asyncio`**.
+* **The Solution:** I migrated the web server to the modern, actively-maintained **Microdot** framework and transitioned the entire multitasking system to cooperative, single-threaded **`asyncio`**.
 * **The Result:** All NeoPixel drawing and background tasks now yield cooperatively to the event loop, keeping the web server 100% active and responsive even during heavy animation loops. 
 
 ### 2. Serialized Thread-Safe Architecture
@@ -29,7 +29,7 @@ All HTML control templates have been completely redesigned with a gorgeous frost
 
 ---
 
-## 📚 Credits & Libraries Used
+## Credits & Libraries Used
 
 This project makes use of the following excellent open-source libraries:
 
@@ -39,7 +39,7 @@ This project makes use of the following excellent open-source libraries:
 
 ---
 
-## 🛠️ Functionality Overview
+## Functionality Overview
 
 1. **Turn On:** Instantly illuminates all place-value LEDs to pure white.
 2. **Turn Off:** Swiftly turns off all LEDs.
