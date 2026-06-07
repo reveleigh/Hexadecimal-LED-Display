@@ -35,7 +35,8 @@ This repository contains different versions of the main controller file, reflect
 
 * **[main.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main.py):** The original implementation using the older, now-deprecated `tinyweb` server and a multithreaded design.
 * **[main_v2.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main_v2.py):** The initial migration to the modern `microdot` server and a cooperative single-threaded `asyncio` loop to prevent concurrent memory collisions.
-* **[main_v3.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main_v3.py):** The current stable and recommended version, which resolves critical signal glitching by adding interrupt shielding and proactive garbage collection.
+* **[main_v3.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main_v3.py):** A stable version that resolves critical signal glitching by adding interrupt shielding and proactive garbage collection.
+* **[main_v4.py](file:///c:/Users/Russell/Documents/Learning/Hexadecimal-LED-Display/main_v4.py):** The current stable and recommended version, which builds on v3 and dims the red place-value backdrop to a faint, comfortable level (`(15, 0, 0)`) in the base counting modes.
 
 ---
 
@@ -45,7 +46,8 @@ While testing `main_v2.py`, the display began to periodically glitch, blink, and
 
 Because the standalone script ran flawlessly, I discovered that the glitching was a software-driven timing issue rather than a hardware fault:
 * **The Root Cause:** The `pi_pico_neopixel` library is written in pure Python. It streams data to the RP2040/RP2350 PIO TX FIFO buffer in a standard loop. Because the hardware FIFO is only 4 words deep, it drains in just 120 microseconds at the NeoPixel data rate (800 kHz). In the full server build, background Wi-Fi AP broadcasts (every 102ms) and automatic garbage collection pauses constantly preempted the CPU. If the CPU was blocked for more than 120 microseconds, the FIFO starved, the line dropped low, and the NeoPixels interpreted it as an accidental reset/latch command mid-frame.
-* **The Solution:** In `main_v3.py`, I monkey-patched `Neopixel.show` to disable interrupts (`machine.disable_irq()`) during data transmission (~4.08ms per frame) and re-enable them immediately afterward. I also added proactive garbage collection (`gc.collect()`) on boot and during visual transitions to clean the heap during idle moments. This completely eliminated the glitches with zero impact on Wi-Fi connection stability.
+* **The Solution (v3):** In `main_v3.py`, I monkey-patched `Neopixel.show` to disable interrupts (`machine.disable_irq()`) during data transmission (~4.08ms per frame) and re-enable them immediately afterward. I also added proactive garbage collection (`gc.collect()`) on boot and during visual transitions to clean the heap during idle moments. This completely eliminated the glitches with zero impact on Wi-Fi connection stability.
+* **Improving Visual Comfort (v4):** In `main_v4.py`, I addressed the issue of the red place-value backdrop being overly bright and visually distracting during base counting modes. I introduced a dedicated `BACKDROP_RED = (15, 0, 0)` constant (approx. 6% brightness). This keeps the place-value backdrop faint but clearly on, making the active white digits much more comfortable to read.
 
 ---
 
